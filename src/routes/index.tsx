@@ -5,7 +5,7 @@ import { ArrowLeft, X } from "lucide-react";
 const STORY_PARAGRAPHS = [
   "Hyderabad, India to Sogod, Cebu — We are 4,968 kilometres apart.",
   "There are 8.2 billion people on this planet, spread across 195 countries and infinite timelines. And somehow, out of all of it, on a random website on a Thursday morning [10 / 07 / 2025], you didn't skip.",
-  "I was in India, and you were in Cebu. We were separated by different oceans, different time zones, and honestly, entirely different worlds. But here we are, 316 days later, and the physical distance hasn't moved me a single inch away from you.",
+  "I was in India, and you were in Sogod. We were separated by different oceans, different time zones, and honestly, entirely different worlds. But here we are, 316 days later, and the physical distance hasn't moved me a single inch away from you.",
   "Happy 19th, Laddu. The probability of us meeting was exactly 0.0000001%, but I would beat those odds a billion times for you.",
 ];
 
@@ -241,6 +241,20 @@ function CinematicExperience() {
 
           {/* --- HORIZONTAL DIVIDER UNDERNEATH MAP & TEXT --- */}
           <div className="h-px w-full bg-white/30 rounded-full mt-6 shrink-0" />
+
+          {/* --- JOURNEY HEADING --- */}
+          <h2
+            className="w-full text-center mt-12 mb-6 text-4xl sm:text-5xl md:text-6xl text-white/95"
+            style={{
+              fontFamily: "'Black Mango', serif",
+              opacity: 0,
+              transform: "translateY(10px)",
+              animation: storyStarted ? "lineReveal 1.5s ease-out 3.5s forwards" : "none",
+              textShadow: "0 0 15px rgba(173, 200, 255, 0.4), 0 0 30px rgba(110, 160, 255, 0.2)",
+            }}
+          >
+            How It All Started...
+          </h2>
           
         </div>
       </section>
@@ -278,6 +292,11 @@ function CinematicExperience() {
       </div>
 
       <style>{`
+        @font-face {
+          font-family: 'Black Mango';
+          src: url('/fonts/blackmango.ttf') format('truetype');
+        }
+
         @keyframes softGlow {
           0%, 100% { filter: brightness(1); text-shadow: 0 0 12px rgba(173,200,255,0.5), 0 0 30px rgba(110,160,255,0.4), 0 0 60px rgba(70,120,220,0.3); }
           50% { filter: brightness(1.1); text-shadow: 0 0 18px rgba(190,215,255,0.75), 0 0 42px rgba(130,180,255,0.55), 0 0 80px rgba(90,140,230,0.45); }
