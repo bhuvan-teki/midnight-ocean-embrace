@@ -186,7 +186,7 @@ function CinematicExperience() {
 
         {/* Content: map + story */}
         <div className="relative z-10 h-full w-full overflow-hidden px-5 pt-20 pb-8 sm:px-10 sm:pt-24 sm:pb-12">
-          <div className="flex h-full w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+          <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
             {/* Floating map image — click to open */}
             <button
               type="button"
@@ -240,7 +240,7 @@ function CinematicExperience() {
           </div>
 
           {/* --- HORIZONTAL DIVIDER UNDERNEATH MAP & TEXT --- */}
-          <div className="h-px w-full max-w-5xl mx-auto bg-white/20 rounded-full mt-10 shrink-0" />
+          <div className="h-px w-full bg-white/30 rounded-full mt-6 shrink-0" />
           
         </div>
       </section>
