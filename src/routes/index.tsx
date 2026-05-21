@@ -36,6 +36,7 @@ function CinematicExperience() {
   const [showPart3, setShowPart3] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const part3ScrollRef = useRef<HTMLDivElement>(null);
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
 
@@ -151,6 +152,40 @@ function CinematicExperience() {
 
     return () => clearInterval(interval);
   }, [isHovered, storyStarted]);
+
+  // --- PART 3: AUTO-SWIPE BRAIN ---
+  useEffect(() => {
+    if (isHovered || !showPart3) return;
+
+    const interval = setInterval(() => {
+      if (part3ScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = part3ScrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+
+        if (maxScroll <= 0) return;
+
+        if (!part3ScrollRef.current.dataset.direction) {
+          part3ScrollRef.current.dataset.direction = 'right';
+        }
+
+        const swipeAmount = clientWidth + 24; 
+
+        if (part3ScrollRef.current.dataset.direction === 'right') {
+          part3ScrollRef.current.scrollBy({ left: swipeAmount, behavior: 'smooth' });
+          if (scrollLeft + clientWidth >= maxScroll - 10) {
+            part3ScrollRef.current.dataset.direction = 'left';
+          }
+        } else {
+          part3ScrollRef.current.scrollBy({ left: -swipeAmount, behavior: 'smooth' });
+          if (scrollLeft <= 10) {
+            part3ScrollRef.current.dataset.direction = 'right';
+          }
+        }
+      }
+    }, 1500); // 1.5 second swipe
+
+    return () => clearInterval(interval);
+  }, [isHovered, showPart3]);
 
   return (
     <main className="fixed inset-0 overflow-hidden bg-black text-white select-none">
@@ -334,18 +369,40 @@ function CinematicExperience() {
                 animation: "lineReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards"
               }}
             >
-              {/* The Omegle Polaroid */}
-              <div 
-                className="shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] aspect-[4/3] rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden relative"
-                style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
+              {/* --- PART 3 SCRAPBOOK CAROUSEL --- */}
+              <div
+                ref={part3ScrollRef}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
               >
-                <img
-                  src="/images/omeglememsgjpeg.jpeg"
-                  alt="Where we met"
-                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
-                  draggable={false}
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+                {/* Image 1: The Omegle Polaroid */}
+                <div 
+                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-grab active:cursor-grabbing rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                  style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
+                >
+                  <img
+                    src="/images/omeglememsgjpeg.jpeg"
+                    alt="Where we met"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                    draggable={false}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+                </div>
+
+                {/* Image 2: The Follow Back Polaroid */}
+                <div 
+                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-grab active:cursor-grabbing rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                  style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.4s" }}
+                >
+                  <img
+                    src="/images/followback.jpeg"
+                    alt="The Follow Back"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                    draggable={false}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                </div>
               </div>
 
               {/* Placeholder for the upcoming text */}
