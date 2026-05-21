@@ -210,9 +210,6 @@ function CinematicExperience() {
             {/* Story text — constrained to top-right area beside the map */}
             </button>
 
-            {/* --- NOTION-STYLE VERTICAL DIVIDER --- */}
-            <div className="hidden sm:block w-px bg-white/15 self-stretch rounded-full" />
-
             {/* Story text — constrained to top-right area beside the map */}
             <div
               className="flex-1 w-full min-w-0 self-start max-h-[55vh] sm:max-h-[60vh] overflow-y-auto pr-1 text-white/90"
@@ -241,6 +238,10 @@ function CinematicExperience() {
               ))}
             </div>
           </div>
+
+          {/* --- HORIZONTAL DIVIDER UNDERNEATH MAP & TEXT --- */}
+          <div className="h-px w-full max-w-5xl mx-auto bg-white/20 rounded-full mt-10 shrink-0" />
+          
         </div>
       </section>
 
