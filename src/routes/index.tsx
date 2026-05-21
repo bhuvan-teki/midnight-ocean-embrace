@@ -188,12 +188,12 @@ function CinematicExperience() {
         {/* Content: map + story */}
         <div className="relative z-10 h-full w-full overflow-y-auto px-5 pt-20 pb-8 sm:px-10 sm:pt-24 sm:pb-12">
           <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
-            {/* --- MEMORY SCRAPBOOK STACK --- */}
+            {/* --- MEMORY SCRAPBOOK STACK (HORIZONTAL SWIPE) --- */}
             <div className="relative shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] aspect-[4/3] mr-4 sm:mr-8 mb-8 sm:mb-0">
               
-              {/* PAGE 2: The Video (Starts hidden behind the map, slides out after typing finishes) */}
+              {/* PAGE 2: The Video (Starts hidden, comes to the FRONT) */}
               <div 
-                className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden ring-1 ring-white/20 shadow-2xl z-10 transition-all duration-[1500ms] ease-out ${typingFinished ? 'opacity-100 translate-y-[25px] translate-x-[20px] rotate-[5deg]' : 'opacity-0 translate-y-0 translate-x-0 rotate-0'}`}
+                className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden ring-1 ring-white/20 shadow-2xl transition-all duration-[1200ms] ease-in-out ${typingFinished ? 'z-20 opacity-100 translate-x-0 translate-y-0 rotate-0 scale-100' : 'z-10 opacity-0 translate-x-[40px] translate-y-[20px] rotate-[8deg] scale-95'}`}
               >
                 <video
                   src="/videos/stillwemet.mp4"
@@ -201,21 +201,23 @@ function CinematicExperience() {
                   muted
                   loop
                   playsInline
-                  className="w-full h-full object-cover opacity-85"
+                  className="w-full h-full object-cover opacity-90"
                 />
-                <div className="absolute inset-0 bg-[#02061a]/30" />
+                <div className="absolute inset-0 bg-[#02061a]/20" />
               </div>
 
-              {/* PAGE 1: The Map (Always on top, slightly tilted left) */}
-              <div style={{ transform: "rotate(-3deg)", transformOrigin: "center" }} className="absolute inset-0 z-20">
+              {/* PAGE 1: The Map (Starts on top, SWIPES LEFT and goes BEHIND) */}
+              <div 
+                className={`absolute inset-0 transition-all duration-[1200ms] ease-in-out ${typingFinished ? 'z-10 translate-x-[-50px] sm:translate-x-[-80px] translate-y-[15px] rotate-[-12deg] scale-90 opacity-80' : 'z-20 translate-x-0 translate-y-0 rotate-[-3deg] scale-100 opacity-100'}`}
+                style={{ transformOrigin: "bottom left" }}
+              >
                 <button
                   type="button"
                   onClick={() => setMapOpen(true)}
                   aria-label="View map full size"
                   className="group w-full h-full rounded-2xl overflow-hidden ring-1 ring-white/10 outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                   style={{
-                    boxShadow: "0 20px 60px -10px rgba(0, 8, 30, 0.85), 0 8px 24px -8px rgba(40, 80, 160, 0.4)",
-                    animation: "floatY 6s ease-in-out infinite",
+                    boxShadow: "0 20px 60px -10px rgba(0, 8, 30, 0.85)",
                   }}
                 >
                   <img
@@ -228,7 +230,6 @@ function CinematicExperience() {
                 </button>
               </div>
             </div>
-
             {/* Story text — constrained to top-right area beside the map */}
             <StoryTypingAnimation 
               paragraphs={STORY_PARAGRAPHS} 
@@ -253,52 +254,6 @@ function CinematicExperience() {
           >
             How It All Started...
           </h2>
-
-          {/* --- THE TIMELINE STORY --- */}
-          <div
-            className={`mt-16 flex w-full max-w-3xl mx-auto flex-col items-center justify-center space-y-16 text-center transition-all duration-[1500ms] delay-[1200ms] pb-24 ${typingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
-            style={{
-              fontFamily: "'Jost', 'Inter', sans-serif",
-            }}
-          >
-            {/* Beat 1 */}
-            <div className="space-y-3">
-              <p className="text-white/50 tracking-[0.25em] text-xs sm:text-sm uppercase font-medium">July 10, 2025</p>
-              <p className="text-2xl sm:text-3xl font-light text-white/95" style={{ textShadow: "0 2px 15px rgba(0,0,0,0.8)" }}>
-                A random Thursday night.
-              </p>
-            </div>
-
-            {/* Beat 2 */}
-            <div className="space-y-3">
-              <p className="text-2xl sm:text-3xl font-light text-white/95" style={{ textShadow: "0 2px 15px rgba(0,0,0,0.8)" }}>
-                India. Philippines.
-              </p>
-            </div>
-
-            {/* Beat 3 */}
-            <div className="space-y-3">
-              <p className="text-2xl sm:text-3xl font-light text-white/90" style={{ textShadow: "0 2px 15px rgba(0,0,0,0.8)" }}>
-                8.2 billion people existed on Earth that day.
-              </p>
-            </div>
-
-            {/* Final Beat */}
-            <div className="space-y-4 pt-8">
-              <p 
-                className="text-4xl sm:text-5xl text-white" 
-                style={{ 
-                  fontFamily: "'Black Mango', serif", 
-                  textShadow: "0 0 20px rgba(173, 200, 255, 0.4), 0 0 40px rgba(110, 160, 255, 0.2)" 
-                }}
-              >
-                And somehow... I met you.
-              </p>
-              <p className="text-white/60 font-light text-sm sm:text-base tracking-wide mt-4">
-                A random chat. A random moment. A permanent connection.
-              </p>
-            </div>
-          </div>
           
         </div>
       </section>
