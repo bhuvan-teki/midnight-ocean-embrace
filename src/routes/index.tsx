@@ -113,28 +113,39 @@ function CinematicExperience() {
     return () => window.removeEventListener("keydown", onKey);
   }, [mapOpen]);
 
-  // --- STEP 2: AUTO-SCROLL BRAIN GOES HERE ---
+  // --- STEP 2: FOOLPROOF AUTO-SCROLL BRAIN ---
   useEffect(() => {
     if (isHovered || !storyStarted) return;
 
     const interval = setInterval(() => {
       if (scrollRef.current) {
-        const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+
+        if (maxScroll <= 0) return; // Safety check if images haven't loaded
+
+        // Set initial direction
+        if (!scrollRef.current.dataset.direction) {
+          scrollRef.current.dataset.direction = 'right';
+        }
 
         // Ping-pong scrolling left and right
-        if (scrollRef.current.dataset.direction === 'left') {
-          scrollRef.current.scrollLeft -= 1;
-          if (scrollRef.current.scrollLeft <= 0) scrollRef.current.dataset.direction = 'right';
+        if (scrollRef.current.dataset.direction === 'right') {
+          scrollRef.current.scrollLeft += 1; // Speed of the pan
+          if (scrollRef.current.scrollLeft >= maxScroll - 1) {
+            scrollRef.current.dataset.direction = 'left';
+          }
         } else {
-          scrollRef.current.scrollLeft += 1;
-          if (scrollRef.current.scrollLeft >= maxScroll - 1) scrollRef.current.dataset.direction = 'left';
+          scrollRef.current.scrollLeft -= 1;
+          if (scrollRef.current.scrollLeft <= 0) {
+            scrollRef.current.dataset.direction = 'right';
+          }
         }
       }
-    }, 15); // 15ms is 60 frames-per-second smooth. Increase to slow it down!
+    }, 15); // 15ms interval for buttery smooth 60fps panning
 
     return () => clearInterval(interval);
   }, [isHovered, storyStarted]);
-  // -------------------------------------------
 
   return (
     <main className="fixed inset-0 overflow-hidden bg-black text-white select-none">
@@ -214,7 +225,7 @@ function CinematicExperience() {
         {/* Content: map + story */}
         <div className="relative z-10 h-full w-full overflow-y-auto px-5 pt-20 pb-8 sm:px-10 sm:pt-24 sm:pb-12">
           <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
-            {/* --- AUTO-SCROLLING INTERACTIVE MEDIA GALLERY --- */}
+            {/* --- 7-ITEM AUTO-SCROLLING MEDIA GALLERY --- */}
             <div
               ref={scrollRef}
               onMouseEnter={() => setIsHovered(true)}
@@ -222,7 +233,8 @@ function CinematicExperience() {
               className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] aspect-[4/3] mr-4 sm:mr-8 mb-8 sm:mb-0 overflow-x-auto scrollbar-hide snap-x snap-mandatory rounded-2xl ring-1 ring-white/20 shadow-2xl"
               style={{
                 animation: "floatY 6s ease-in-out infinite",
-                boxShadow: "0 20px 60px -10px rgba(0, 8, 30, 0.85)"
+                boxShadow: "0 20px 60px -10px rgba(0, 8, 30, 0.85)",
+                scrollBehavior: "auto" // Crucial for smooth interval scrolling
               }}
             >
               {/* ITEM 1: The Map */}
@@ -251,6 +263,19 @@ function CinematicExperience() {
                 />
                 <div className="pointer-events-none absolute inset-0 bg-[#02061a]/20" />
               </div>
+
+              {/* ITEMS 3 to 7: The "Still We Met" Image Sequence */}
+              {[1, 2, 3, 4, 5].map((num) => (
+                <div key={num} className="w-full h-full shrink-0 snap-center relative cursor-grab active:cursor-grabbing">
+                  <img
+                    src={`/images/stillwemet${num}.png`}
+                    alt={`Memory ${num}`}
+                    className="w-full h-full object-cover opacity-95 transition-transform duration-700 hover:scale-[1.03]"
+                    draggable={false}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                </div>
+              ))}
             </div>
             {/* Story text — constrained to top-right area beside the map */}
             <StoryTypingAnimation 
