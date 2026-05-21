@@ -212,8 +212,6 @@ function CinematicExperience() {
             <StoryTypingAnimation paragraphs={STORY_PARAGRAPHS} started={storyStarted} />
 
           </div>
-          
-          </div>
 
           {/* --- HORIZONTAL DIVIDER UNDERNEATH MAP & TEXT --- */}
           <div className="h-px w-full bg-white/30 rounded-full mt-6 shrink-0" />
@@ -289,6 +287,8 @@ function CinematicExperience() {
         html, body, #root { height: 100%; overscroll-behavior: none; }
       `}</style>
     </main>
+    );
+}
 
     function StoryTypingAnimation({ paragraphs, started }: { paragraphs: string[], started: boolean }) {
   const [completedParagraphs, setCompletedParagraphs] = useState<string[]>([]);
