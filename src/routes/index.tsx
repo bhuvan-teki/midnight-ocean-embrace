@@ -210,7 +210,7 @@ function CinematicExperience() {
 
             {/* Story text — constrained to top-right area beside the map */}
             <div
-              className="flex-1 min-w-0 max-w-2xl self-start max-h-[55vh] sm:max-h-[60vh] overflow-y-auto pr-1 text-white/90"
+              className="flex-1 w-full min-w-0 self-start max-h-[55vh] sm:max-h-[60vh] overflow-y-auto pr-1 text-white/90"
               style={{
                 fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif",
                 fontWeight: 200,
