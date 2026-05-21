@@ -217,8 +217,6 @@ function CinematicExperience() {
             />
 
           </div>
-          
-          </div>
 
           {/* --- HORIZONTAL DIVIDER UNDERNEATH MAP & TEXT --- */}
           <div 
