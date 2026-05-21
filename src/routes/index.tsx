@@ -9,6 +9,13 @@ const STORY_PARAGRAPHS = [
   "Happy 19th, Laddu. The probability of us meeting was exactly 0.0000001%, but I would beat those odds a billion times for you.",
 ];
 
+// Add this right below STORY_PARAGRAPHS
+const OMEGLE_STORY_PARAGRAPHS = [
+  "It was a random Thursday night. I was bored, so I opened my old laptop and got on a stranger chat site. Everyone kept skipping me. I kept skipping too. Then we connected — I typed \"hi,\" you typed it back. I told you my name. Slowly we just... talked. Really talked. About life, about business, about everything. I asked for your Instagram before we lost each other. You gave it. I sent the request and waited.",
+  "4:10 AM, July 11, 2025 — you followed me back.",
+  "That's how it started. That's how I found you in 8.2 billion people."
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -413,18 +420,12 @@ function CinematicExperience() {
                 </div>
               </div>
 
-              <div
-                className="flex-1 w-full min-w-0 self-start pr-1"
-                style={{
-                  fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif",
-                  fontWeight: 200,
-                  letterSpacing: "0.015em",
-                }}
-              >
-                <p className="text-white/50 italic animate-pulse text-[15px] sm:text-base mt-2">
-                  [Waiting for the Omegle story text... I will drop the typing animation here when you provide it!]
-                </p>
-              </div>
+              <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em", }}>
+  <StoryTypingAnimation 
+    paragraphs={OMEGLE_STORY_PARAGRAPHS} 
+    started={showPart3} 
+  />
+</div>
             </div>
           )}
           
