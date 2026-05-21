@@ -30,6 +30,8 @@ type Scene = 1 | 2;
 
 function CinematicExperience() {
   const [scene, setScene] = useState<Scene>(1);
+  const [mapOpen, setMapOpen] = useState(false);
+  const [storyStarted, setStoryStarted] = useState(false);
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
 
