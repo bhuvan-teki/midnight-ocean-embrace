@@ -179,29 +179,97 @@ function CinematicExperience() {
         <button
           onClick={goToScene1}
           aria-label="Go back"
-          className="absolute top-5 left-5 sm:top-7 sm:left-7 flex h-11 w-11 items-center justify-center rounded-full bg-white/5 backdrop-blur-sm ring-1 ring-white/15 text-white/90 transition hover:bg-white/10 hover:scale-105 active:scale-95"
+          className="absolute top-5 left-5 sm:top-7 sm:left-7 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/5 backdrop-blur-sm ring-1 ring-white/15 text-white/90 transition hover:bg-white/10 hover:scale-105 active:scale-95"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
 
-        {/* Floating map image */}
-        <div
-          className="absolute top-20 left-5 sm:top-24 sm:left-10 w-[44vw] max-w-[260px] sm:max-w-[300px] aspect-[4/3] rounded-2xl overflow-hidden ring-1 ring-white/10"
-          style={{
-            boxShadow:
-              "0 20px 60px -10px rgba(0, 8, 30, 0.85), 0 8px 24px -8px rgba(40, 80, 160, 0.4)",
-            animation: "floatY 6s ease-in-out infinite",
-          }}
-        >
-          <img
-            src="/images/mapphind.jpeg"
-            alt="Map"
-            className="h-full w-full object-cover"
-            draggable={false}
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+        {/* Content: map + story */}
+        <div className="relative z-10 h-full w-full overflow-hidden px-5 pt-20 pb-8 sm:px-10 sm:pt-24 sm:pb-12">
+          <div className="flex h-full w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+            {/* Floating map image — click to open */}
+            <button
+              type="button"
+              onClick={() => setMapOpen(true)}
+              aria-label="View map full size"
+              className="group relative shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] aspect-[4/3] rounded-2xl overflow-hidden ring-1 ring-white/10 outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+              style={{
+                boxShadow:
+                  "0 20px 60px -10px rgba(0, 8, 30, 0.85), 0 8px 24px -8px rgba(40, 80, 160, 0.4)",
+                animation: "floatY 6s ease-in-out infinite",
+              }}
+            >
+              <img
+                src="/images/mapphind.jpeg"
+                alt="Map from Hyderabad to Sogod, Cebu"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                draggable={false}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+            </button>
+
+            {/* Story text — smooth line-by-line reveal */}
+            <div
+              className="flex-1 min-w-0 max-w-2xl overflow-y-auto pr-1 text-white/90"
+              style={{
+                fontFamily: "'Inter', system-ui, sans-serif",
+                fontWeight: 200,
+                letterSpacing: "0.01em",
+              }}
+            >
+              {STORY_PARAGRAPHS.map((p, i) => (
+                <p
+                  key={i}
+                  className="mb-5 text-[15px] sm:text-base md:text-lg leading-relaxed sm:leading-[1.75]"
+                  style={{
+                    opacity: 0,
+                    filter: "blur(6px)",
+                    transform: "translateY(8px)",
+                    animation: storyStarted
+                      ? `lineReveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) ${i * 0.9}s forwards`
+                      : "none",
+                    textShadow: "0 1px 12px rgba(0, 10, 30, 0.6)",
+                  }}
+                >
+                  {p}
+                </p>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* Map Lightbox */}
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md transition-opacity duration-300"
+        style={{
+          opacity: mapOpen ? 1 : 0,
+          pointerEvents: mapOpen ? "auto" : "none",
+        }}
+        onClick={() => setMapOpen(false)}
+      >
+        <button
+          aria-label="Close"
+          onClick={(e) => {
+            e.stopPropagation();
+            setMapOpen(false);
+          }}
+          className="absolute top-5 right-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 text-white/90 transition hover:bg-white/20"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <img
+          src="/images/mapphind.jpeg"
+          alt="Map full size"
+          onClick={(e) => e.stopPropagation()}
+          className="max-h-[92vh] max-w-[94vw] rounded-xl object-contain shadow-2xl"
+          draggable={false}
+          style={{
+            transform: mapOpen ? "scale(1)" : "scale(0.96)",
+            transition: "transform 300ms ease-out",
+          }}
+        />
+      </div>
 
       <style>{`
         @keyframes softGlow {
@@ -211,6 +279,11 @@ function CinematicExperience() {
         @keyframes floatY {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-8px); }
+        }
+        @keyframes lineReveal {
+          0% { opacity: 0; filter: blur(6px); transform: translateY(8px); }
+          60% { opacity: 0.9; filter: blur(1px); }
+          100% { opacity: 1; filter: blur(0); transform: translateY(0); }
         }
         html, body, #root { height: 100%; overscroll-behavior: none; }
       `}</style>
