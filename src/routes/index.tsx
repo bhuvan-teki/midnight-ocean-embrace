@@ -301,16 +301,28 @@ function CinematicExperience() {
             className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-300 ${typingFinished ? "opacity-100" : "opacity-0"}`} 
           />
 
-          {/* --- JOURNEY HEADING --- */}
-          <h2
-            className={`w-full text-center mt-12 mb-6 text-4xl sm:text-5xl md:text-6xl text-white/95 transition-all duration-1000 delay-700 ${typingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-            style={{
-              fontFamily: "'Black Mango', serif",
-              textShadow: "0 0 15px rgba(173, 200, 255, 0.4), 0 0 30px rgba(110, 160, 255, 0.2)",
-            }}
-          >
-            How It All Started...
-          </h2>
+          {/* --- CLICKABLE JOURNEY HEADING --- */}
+          <div className={`w-full flex justify-center mt-12 mb-12 transition-all duration-1000 delay-700 ${typingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+            <button
+              onClick={() => alert("Ready for the next part!")} 
+              className="group relative outline-none"
+            >
+              <h2
+                className="text-4xl sm:text-5xl md:text-6xl text-white/95 transition-transform duration-500 group-hover:scale-[1.03] group-active:scale-[0.97]"
+                style={{
+                  fontFamily: "'Black Mango', serif",
+                  textShadow: "0 0 15px rgba(173, 200, 255, 0.4), 0 0 30px rgba(110, 160, 255, 0.2)",
+                }}
+              >
+                How It All Started...
+              </h2>
+              {/* Glowing underline that expands on hover */}
+              <div 
+                className="absolute -bottom-3 left-1/2 h-[1px] w-0 -translate-x-1/2 bg-white/60 transition-all duration-500 group-hover:w-3/4" 
+                style={{ boxShadow: "0 0 12px rgba(173, 200, 255, 0.6)" }} 
+              />
+            </button>
+          </div>
           
         </div>
       </section>
