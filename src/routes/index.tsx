@@ -208,19 +208,19 @@ function CinematicExperience() {
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
             </button>
 
-            {/* Story text — smooth line-by-line reveal */}
+            {/* Story text — constrained to top-right area beside the map */}
             <div
-              className="flex-1 min-w-0 max-w-2xl overflow-y-auto pr-1 text-white/90"
+              className="flex-1 min-w-0 max-w-2xl self-start max-h-[55vh] sm:max-h-[60vh] overflow-y-auto pr-1 text-white/90"
               style={{
-                fontFamily: "'Inter', system-ui, sans-serif",
+                fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif",
                 fontWeight: 200,
-                letterSpacing: "0.01em",
+                letterSpacing: "0.015em",
               }}
             >
               {STORY_PARAGRAPHS.map((p, i) => (
                 <p
                   key={i}
-                  className="mb-5 text-[15px] sm:text-base md:text-lg leading-relaxed sm:leading-[1.75]"
+                  className="mb-4 text-[14px] sm:text-[15px] md:text-base leading-relaxed sm:leading-[1.7]"
                   style={{
                     opacity: 0,
                     filter: "blur(6px)",
