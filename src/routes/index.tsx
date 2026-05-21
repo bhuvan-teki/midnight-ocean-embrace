@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
     links: [
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Italianno&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Italianno&family=Inter:wght@200;300&display=swap",
       },
     ],
   }),
