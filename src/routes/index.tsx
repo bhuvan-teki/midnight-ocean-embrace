@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, X, ZoomIn, ZoomOut } from "lucide-react";
 
 const STORY_PARAGRAPHS = [
   "Hyderabad, India to Sogod, Cebu — We are 4,968 kilometres apart.",
@@ -30,11 +30,15 @@ type Scene = 1 | 2;
 
 function CinematicExperience() {
   const [scene, setScene] = useState<Scene>(1);
-  const [mapOpen, setMapOpen] = useState(false);
   const [storyStarted, setStoryStarted] = useState(false);
   const [typingFinished, setTypingFinished] = useState(false);
   const [showPart3, setShowPart3] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  
+  // New Universal Lightbox States
+  const [activeMedia, setActiveMedia] = useState<{ src: string; type: "image" | "video" } | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const part3ScrollRef = useRef<HTMLDivElement>(null);
   const video1Ref = useRef<HTMLVideoElement>(null);
@@ -87,7 +91,7 @@ function CinematicExperience() {
 
   const goToScene1 = () => {
     setStoryStarted(false);
-    setMapOpen(false);
+    setActiveMedia(null);
     if (window.history.state?.scene === 2) {
       window.history.back();
     } else {
@@ -105,15 +109,29 @@ function CinematicExperience() {
     return () => clearTimeout(t);
   }, [scene]);
 
+  // Lightbox Handlers
+  const closeLightbox = () => {
+    setActiveMedia(null);
+    setTimeout(() => setZoomLevel(1), 300); // Reset zoom smoothly
+  };
+
+  const handleZoom = (e: React.MouseEvent, direction: "in" | "out") => {
+    e.stopPropagation();
+    setZoomLevel((prev) => {
+      if (direction === "in") return Math.min(prev + 0.5, 4);
+      return Math.max(prev - 0.5, 0.5);
+    });
+  };
+
   // Close lightbox on Escape
   useEffect(() => {
-    if (!mapOpen) return;
+    if (!activeMedia) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMapOpen(false);
+      if (e.key === "Escape") closeLightbox();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [mapOpen]);
+  }, [activeMedia]);
 
   // --- STEP 2: INDEPENDENT AUTO-SWIPE BRAIN ---
   useEffect(() => {
@@ -126,29 +144,25 @@ function CinematicExperience() {
 
         if (maxScroll <= 0) return; // Safety check
 
-        // Initialize direction
         if (!scrollRef.current.dataset.direction) {
           scrollRef.current.dataset.direction = 'right';
         }
 
-        // Swipe by exactly ONE box width plus the gap (24px)
         const swipeAmount = clientWidth + 24; 
 
         if (scrollRef.current.dataset.direction === 'right') {
           scrollRef.current.scrollBy({ left: swipeAmount, behavior: 'smooth' });
-          // If we reach the end, turn around
           if (scrollLeft + clientWidth >= maxScroll - 10) {
             scrollRef.current.dataset.direction = 'left';
           }
         } else {
           scrollRef.current.scrollBy({ left: -swipeAmount, behavior: 'smooth' });
-          // If we reach the beginning, turn around
           if (scrollLeft <= 10) {
             scrollRef.current.dataset.direction = 'right';
           }
         }
       }
-    }, 1500); // Wait 1.5 seconds, then swipe. (Change this 1500 to 500 if you want exactly 0.5s)
+    }, 1500); 
 
     return () => clearInterval(interval);
   }, [isHovered, storyStarted]);
@@ -182,7 +196,7 @@ function CinematicExperience() {
           }
         }
       }
-    }, 1500); // 1.5 second swipe
+    }, 1500);
 
     return () => clearInterval(interval);
   }, [isHovered, showPart3]);
@@ -190,7 +204,6 @@ function CinematicExperience() {
   return (
     <main className="fixed inset-0 overflow-hidden bg-black text-white select-none">
       {/* Scene 1 */}
-      
       <section
         aria-hidden={scene !== 1}
         className="absolute inset-0 transition-opacity duration-500 ease-out"
@@ -209,10 +222,8 @@ function CinematicExperience() {
           preload="auto"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        {/* Soft dark overlay with deep blue tint */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#03060f]/70 via-[#04132b]/55 to-[#020615]/85" />
 
-        {/* Bottom-right glowing message */}
         <button
           onClick={goToScene2}
           className="group absolute bottom-8 right-6 sm:bottom-12 sm:right-12 text-right outline-none"
@@ -250,10 +261,8 @@ function CinematicExperience() {
           preload="auto"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        {/* Cinematic dark blue overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#02061a]/75 via-[#03102e]/55 to-[#01030f]/90" />
 
-        {/* Back button */}
         <button
           onClick={goToScene1}
           aria-label="Go back"
@@ -262,7 +271,6 @@ function CinematicExperience() {
           <ArrowLeft className="h-5 w-5" />
         </button>
 
-        {/* Content: map + story */}
         <div className="relative z-10 h-full w-full overflow-y-auto px-5 pt-20 pb-8 sm:px-10 sm:pt-24 sm:pb-12">
           <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
             {/* --- INDEPENDENT SCRAPBOOK CAROUSEL --- */}
@@ -274,9 +282,9 @@ function CinematicExperience() {
             >
               {/* ITEM 1: The Map */}
               <div 
-                className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-grab active:cursor-grabbing rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden" 
+                className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden" 
                 style={{ transform: "rotate(-1deg)", animation: "floatY 6s ease-in-out infinite" }}
-                onClick={() => setMapOpen(true)}
+                onClick={() => setActiveMedia({ src: "/images/mapphind.jpeg", type: "image" })}
               >
                 <img
                   src="/images/mapphind.jpeg"
@@ -289,8 +297,9 @@ function CinematicExperience() {
 
               {/* ITEM 2: The New York Video */}
               <div 
-                className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-grab active:cursor-grabbing rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
                 style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.5s" }}
+                onClick={() => setActiveMedia({ src: "/videos/stillwemet.mp4", type: "video" })}
               >
                 <video
                   src="/videos/stillwemet.mp4"
@@ -307,11 +316,12 @@ function CinematicExperience() {
               {[1, 2, 3, 4, 5].map((num) => (
                 <div 
                   key={num} 
-                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-grab active:cursor-grabbing rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
                   style={{ 
                     transform: num % 2 === 0 ? "rotate(-1.5deg)" : "rotate(1deg)",
                     animation: `floatY 6s ease-in-out infinite ${num * 0.3}s` 
                   }}
+                  onClick={() => setActiveMedia({ src: `/images/stillwemet${num}.png`, type: "image" })}
                 >
                   <img
                     src={`/images/stillwemet${num}.png`}
@@ -323,7 +333,7 @@ function CinematicExperience() {
                 </div>
               ))}
             </div>
-            {/* Story text — constrained to top-right area beside the map */}
+            
             <StoryTypingAnimation 
               paragraphs={STORY_PARAGRAPHS} 
               started={storyStarted} 
@@ -332,12 +342,10 @@ function CinematicExperience() {
 
           </div>
 
-          {/* --- HORIZONTAL DIVIDER UNDERNEATH MAP & TEXT --- */}
           <div 
             className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-300 ${typingFinished ? "opacity-100" : "opacity-0"}`} 
           />
 
-          {/* --- CLICKABLE JOURNEY HEADING --- */}
           <div className={`w-full flex justify-center mt-12 mb-12 transition-all duration-1000 delay-700 ${typingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
             <button
               onClick={() => setShowPart3(true)} 
@@ -352,7 +360,6 @@ function CinematicExperience() {
               >
                 How It All Started...
               </h2>
-              {/* Glowing underline that expands on hover */}
               <div 
                 className="absolute -bottom-3 left-1/2 h-[1px] w-0 -translate-x-1/2 bg-white/60 transition-all duration-500 group-hover:w-3/4" 
                 style={{ boxShadow: "0 0 12px rgba(173, 200, 255, 0.6)" }} 
@@ -360,7 +367,7 @@ function CinematicExperience() {
             </button>
           </div>
 
-          {/* --- PART 3: THE OMEGLE ORIGIN (REVEALED ON CLICK) --- */}
+          {/* --- PART 3: THE OMEGLE ORIGIN --- */}
           {showPart3 && (
             <div 
               className="w-full flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10 mt-4 pb-20"
@@ -369,7 +376,6 @@ function CinematicExperience() {
                 animation: "lineReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards"
               }}
             >
-              {/* --- PART 3 SCRAPBOOK CAROUSEL --- */}
               <div
                 ref={part3ScrollRef}
                 onMouseEnter={() => setIsHovered(true)}
@@ -378,8 +384,9 @@ function CinematicExperience() {
               >
                 {/* Image 1: The Omegle Polaroid */}
                 <div 
-                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-grab active:cursor-grabbing rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
                   style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
+                  onClick={() => setActiveMedia({ src: "/images/omeglememsgjpeg.jpeg", type: "image" })}
                 >
                   <img
                     src="/images/omeglememsgjpeg.jpeg"
@@ -392,8 +399,9 @@ function CinematicExperience() {
 
                 {/* Image 2: The Follow Back Polaroid */}
                 <div 
-                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-grab active:cursor-grabbing rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
                   style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.4s" }}
+                  onClick={() => setActiveMedia({ src: "/images/followback.jpeg", type: "image" })}
                 >
                   <img
                     src="/images/followback.jpeg"
@@ -405,7 +413,6 @@ function CinematicExperience() {
                 </div>
               </div>
 
-              {/* Placeholder for the upcoming text */}
               <div
                 className="flex-1 w-full min-w-0 self-start pr-1"
                 style={{
@@ -424,36 +431,72 @@ function CinematicExperience() {
         </div>
       </section>
 
-      {/* Map Lightbox */}
+      {/* Universal Media Zoom Lightbox */}
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md transition-opacity duration-300"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md transition-opacity duration-300"
         style={{
-          opacity: mapOpen ? 1 : 0,
-          pointerEvents: mapOpen ? "auto" : "none",
+          opacity: activeMedia ? 1 : 0,
+          pointerEvents: activeMedia ? "auto" : "none",
         }}
-        onClick={() => setMapOpen(false)}
+        onClick={closeLightbox}
       >
-        <button
-          aria-label="Close"
-          onClick={(e) => {
-            e.stopPropagation();
-            setMapOpen(false);
-          }}
-          className="absolute top-5 right-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 text-white/90 transition hover:bg-white/20"
-        >
-          <X className="h-5 w-5" />
-        </button>
-        <img
-          src="/images/mapphind.jpeg"
-          alt="Map full size"
-          onClick={(e) => e.stopPropagation()}
-          className="max-h-[92vh] max-w-[94vw] rounded-xl object-contain shadow-2xl"
-          draggable={false}
+        {/* Controls Container */}
+        <div className="absolute top-5 right-5 flex items-center gap-4 z-50">
+          <button
+            aria-label="Zoom Out"
+            onClick={(e) => handleZoom(e, "out")}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 text-white/90 transition hover:bg-white/20"
+          >
+            <ZoomOut className="h-5 w-5" />
+          </button>
+          <button
+            aria-label="Zoom In"
+            onClick={(e) => handleZoom(e, "in")}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 text-white/90 transition hover:bg-white/20"
+          >
+            <ZoomIn className="h-5 w-5" />
+          </button>
+          <button
+            aria-label="Close"
+            onClick={(e) => {
+              e.stopPropagation();
+              closeLightbox();
+            }}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-red-500/20 ring-1 ring-red-500/50 text-white transition hover:bg-red-500/40 ml-4"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Media Container */}
+        <div 
+          className="relative max-h-[90vh] max-w-[90vw] overflow-visible flex items-center justify-center"
           style={{
-            transform: mapOpen ? "scale(1)" : "scale(0.96)",
-            transition: "transform 300ms ease-out",
+              transform: `scale(${activeMedia ? zoomLevel : 0.96})`,
+              transition: "transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1)",
           }}
-        />
+        >
+          {activeMedia?.type === "image" && (
+            <img
+              src={activeMedia.src}
+              alt="Zoomed Media"
+              onClick={(e) => e.stopPropagation()}
+              className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+              draggable={false}
+            />
+          )}
+          {activeMedia?.type === "video" && (
+            <video
+              src={activeMedia.src}
+              autoPlay
+              controls
+              loop
+              playsInline
+              onClick={(e) => e.stopPropagation()}
+              className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+            />
+          )}
+        </div>
       </div>
 
       <style>{`
@@ -483,7 +526,7 @@ function CinematicExperience() {
     );
 }
 
-   function StoryTypingAnimation({ paragraphs, started, onComplete }: { paragraphs: string[], started: boolean, onComplete?: () => void }) {
+function StoryTypingAnimation({ paragraphs, started, onComplete }: { paragraphs: string[], started: boolean, onComplete?: () => void }) {
   const [completedParagraphs, setCompletedParagraphs] = useState<string[]>([]);
   const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
