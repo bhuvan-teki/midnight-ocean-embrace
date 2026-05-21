@@ -33,6 +33,8 @@ function CinematicExperience() {
   const [mapOpen, setMapOpen] = useState(false);
   const [storyStarted, setStoryStarted] = useState(false);
   const [typingFinished, setTypingFinished] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
 
@@ -111,9 +113,33 @@ function CinematicExperience() {
     return () => window.removeEventListener("keydown", onKey);
   }, [mapOpen]);
 
+  // --- STEP 2: AUTO-SCROLL BRAIN GOES HERE ---
+  useEffect(() => {
+    if (isHovered || !storyStarted) return;
+
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
+
+        // Ping-pong scrolling left and right
+        if (scrollRef.current.dataset.direction === 'left') {
+          scrollRef.current.scrollLeft -= 1;
+          if (scrollRef.current.scrollLeft <= 0) scrollRef.current.dataset.direction = 'right';
+        } else {
+          scrollRef.current.scrollLeft += 1;
+          if (scrollRef.current.scrollLeft >= maxScroll - 1) scrollRef.current.dataset.direction = 'left';
+        }
+      }
+    }, 15); // 15ms is 60 frames-per-second smooth. Increase to slow it down!
+
+    return () => clearInterval(interval);
+  }, [isHovered, storyStarted]);
+  // -------------------------------------------
+
   return (
     <main className="fixed inset-0 overflow-hidden bg-black text-white select-none">
       {/* Scene 1 */}
+      
       <section
         aria-hidden={scene !== 1}
         className="absolute inset-0 transition-opacity duration-500 ease-out"
@@ -188,46 +214,42 @@ function CinematicExperience() {
         {/* Content: map + story */}
         <div className="relative z-10 h-full w-full overflow-y-auto px-5 pt-20 pb-8 sm:px-10 sm:pt-24 sm:pb-12">
           <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
-            {/* --- MEMORY SCRAPBOOK STACK (HORIZONTAL SWIPE) --- */}
-            <div className="relative shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] aspect-[4/3] mr-4 sm:mr-8 mb-8 sm:mb-0">
-              
-              {/* PAGE 2: The Video (Starts hidden, comes to the FRONT) */}
+            {/* --- AUTO-SCROLLING INTERACTIVE MEDIA GALLERY --- */}
+            <div
+              ref={scrollRef}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] aspect-[4/3] mr-4 sm:mr-8 mb-8 sm:mb-0 overflow-x-auto scrollbar-hide snap-x snap-mandatory rounded-2xl ring-1 ring-white/20 shadow-2xl"
+              style={{
+                animation: "floatY 6s ease-in-out infinite",
+                boxShadow: "0 20px 60px -10px rgba(0, 8, 30, 0.85)"
+              }}
+            >
+              {/* ITEM 1: The Map */}
               <div 
-                className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden ring-1 ring-white/20 shadow-2xl transition-all duration-[1200ms] ease-in-out ${typingFinished ? 'z-20 opacity-100 translate-x-0 translate-y-0 rotate-0 scale-100' : 'z-10 opacity-0 translate-x-[40px] translate-y-[20px] rotate-[8deg] scale-95'}`}
+                className="w-full h-full shrink-0 snap-center relative cursor-grab active:cursor-grabbing" 
+                onClick={() => setMapOpen(true)}
               >
+                <img
+                  src="/images/mapphind.jpeg"
+                  alt="Map from Hyderabad to Sogod, Cebu"
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+                  draggable={false}
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+              </div>
+
+              {/* ITEM 2: The New York Video */}
+              <div className="w-full h-full shrink-0 snap-center relative cursor-grab active:cursor-grabbing">
                 <video
                   src="/videos/stillwemet.mp4"
                   autoPlay
                   muted
                   loop
                   playsInline
-                  className="w-full h-full object-cover opacity-90"
+                  className="w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-[1.03]"
                 />
-                <div className="absolute inset-0 bg-[#02061a]/20" />
-              </div>
-
-              {/* PAGE 1: The Map (Starts on top, SWIPES LEFT and goes BEHIND) */}
-              <div 
-                className={`absolute inset-0 transition-all duration-[1200ms] ease-in-out ${typingFinished ? 'z-10 translate-x-[-50px] sm:translate-x-[-80px] translate-y-[15px] rotate-[-12deg] scale-90 opacity-80' : 'z-20 translate-x-0 translate-y-0 rotate-[-3deg] scale-100 opacity-100'}`}
-                style={{ transformOrigin: "bottom left" }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setMapOpen(true)}
-                  aria-label="View map full size"
-                  className="group w-full h-full rounded-2xl overflow-hidden ring-1 ring-white/10 outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-                  style={{
-                    boxShadow: "0 20px 60px -10px rgba(0, 8, 30, 0.85)",
-                  }}
-                >
-                  <img
-                    src="/images/mapphind.jpeg"
-                    alt="Map from Hyderabad to Sogod, Cebu"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                    draggable={false}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
-                </button>
+                <div className="pointer-events-none absolute inset-0 bg-[#02061a]/20" />
               </div>
             </div>
             {/* Story text — constrained to top-right area beside the map */}
@@ -291,6 +313,8 @@ function CinematicExperience() {
       </div>
 
       <style>{`
+      .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         @font-face {
           font-family: 'Black Mango';
           src: url('/fonts/blackmango.ttf') format('truetype');
