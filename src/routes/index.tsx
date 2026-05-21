@@ -30,8 +30,6 @@ type Scene = 1 | 2;
 
 function CinematicExperience() {
   const [scene, setScene] = useState<Scene>(1);
-  // Replace your existing mapOpen state with this:
-  const [lightboxMedia, setLightboxMedia] = useState<{ src: string, type: 'image' | 'video' } | null>(null);
   const [storyStarted, setStoryStarted] = useState(false);
   const [typingFinished, setTypingFinished] = useState(false);
   const [showPart3, setShowPart3] = useState(false);
