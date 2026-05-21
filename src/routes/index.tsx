@@ -32,6 +32,7 @@ function CinematicExperience() {
   const [scene, setScene] = useState<Scene>(1);
   const [mapOpen, setMapOpen] = useState(false);
   const [storyStarted, setStoryStarted] = useState(false);
+  const [typingFinished, setTypingFinished] = useState(false);
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
 
@@ -209,21 +210,26 @@ function CinematicExperience() {
             </button>
 
             {/* Story text — constrained to top-right area beside the map */}
-            <StoryTypingAnimation paragraphs={STORY_PARAGRAPHS} started={storyStarted} />
+            <StoryTypingAnimation 
+              paragraphs={STORY_PARAGRAPHS} 
+              started={storyStarted} 
+              onComplete={() => setTypingFinished(true)} 
+            />
 
+          </div>
+          
           </div>
 
           {/* --- HORIZONTAL DIVIDER UNDERNEATH MAP & TEXT --- */}
-          <div className="h-px w-full bg-white/30 rounded-full mt-6 shrink-0" />
+          <div 
+            className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-300 ${typingFinished ? "opacity-100" : "opacity-0"}`} 
+          />
 
           {/* --- JOURNEY HEADING --- */}
           <h2
-            className="w-full text-center mt-12 mb-6 text-4xl sm:text-5xl md:text-6xl text-white/95"
+            className={`w-full text-center mt-12 mb-6 text-4xl sm:text-5xl md:text-6xl text-white/95 transition-all duration-1000 delay-700 ${typingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             style={{
               fontFamily: "'Black Mango', serif",
-              opacity: 0,
-              transform: "translateY(10px)",
-              animation: storyStarted ? "lineReveal 1.5s ease-out 3.5s forwards" : "none",
               textShadow: "0 0 15px rgba(173, 200, 255, 0.4), 0 0 30px rgba(110, 160, 255, 0.2)",
             }}
           >
@@ -290,7 +296,7 @@ function CinematicExperience() {
     );
 }
 
-    function StoryTypingAnimation({ paragraphs, started }: { paragraphs: string[], started: boolean }) {
+   function StoryTypingAnimation({ paragraphs, started, onComplete }: { paragraphs: string[], started: boolean, onComplete?: () => void }) {
   const [completedParagraphs, setCompletedParagraphs] = useState<string[]>([]);
   const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
@@ -303,7 +309,10 @@ function CinematicExperience() {
       return;
     }
 
-    if (currentParagraphIndex >= paragraphs.length) return;
+    if (currentParagraphIndex >= paragraphs.length) {
+      if (onComplete) onComplete();
+      return;
+    }
 
     const fullText = paragraphs[currentParagraphIndex];
 
