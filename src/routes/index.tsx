@@ -81,12 +81,34 @@ function CinematicExperience() {
   };
 
   const goToScene1 = () => {
+    setStoryStarted(false);
+    setMapOpen(false);
     if (window.history.state?.scene === 2) {
       window.history.back();
     } else {
       setScene(1);
     }
   };
+
+  // Trigger story reveal 1.5s after entering scene 2
+  useEffect(() => {
+    if (scene !== 2) {
+      setStoryStarted(false);
+      return;
+    }
+    const t = setTimeout(() => setStoryStarted(true), 1500);
+    return () => clearTimeout(t);
+  }, [scene]);
+
+  // Close lightbox on Escape
+  useEffect(() => {
+    if (!mapOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMapOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mapOpen]);
 
   return (
     <main className="fixed inset-0 overflow-hidden bg-black text-white select-none">
