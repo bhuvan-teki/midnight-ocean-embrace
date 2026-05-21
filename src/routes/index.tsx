@@ -206,37 +206,13 @@ function CinematicExperience() {
                 draggable={false}
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
-
-            {/* Story text — constrained to top-right area beside the map */}
             </button>
 
             {/* Story text — constrained to top-right area beside the map */}
-            <div
-              className="flex-1 w-full min-w-0 self-start max-h-[55vh] sm:max-h-[60vh] overflow-y-auto pr-1 text-white/90"
-              style={{
-                fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif",
-                fontWeight: 200,
-                letterSpacing: "0.015em",
-              }}
-            >
-              {STORY_PARAGRAPHS.map((p, i) => (
-                <p
-                  key={i}
-                  className="mb-4 text-[14px] sm:text-[15px] md:text-base leading-relaxed sm:leading-[1.7]"
-                  style={{
-                    opacity: 0,
-                    filter: "blur(6px)",
-                    transform: "translateY(8px)",
-                    animation: storyStarted
-                      ? `lineReveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) ${i * 0.9}s forwards`
-                      : "none",
-                    textShadow: "0 1px 12px rgba(0, 10, 30, 0.6)",
-                  }}
-                >
-                  {p}
-                </p>
-              ))}
-            </div>
+            <StoryTypingAnimation paragraphs={STORY_PARAGRAPHS} started={storyStarted} />
+
+          </div>
+          
           </div>
 
           {/* --- HORIZONTAL DIVIDER UNDERNEATH MAP & TEXT --- */}
@@ -313,5 +289,64 @@ function CinematicExperience() {
         html, body, #root { height: 100%; overscroll-behavior: none; }
       `}</style>
     </main>
+
+    function StoryTypingAnimation({ paragraphs, started }: { paragraphs: string[], started: boolean }) {
+  const [completedParagraphs, setCompletedParagraphs] = useState<string[]>([]);
+  const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
+  const [currentText, setCurrentText] = useState("");
+
+  useEffect(() => {
+    if (!started) {
+      setCompletedParagraphs([]);
+      setCurrentParagraphIndex(0);
+      setCurrentText("");
+      return;
+    }
+
+    if (currentParagraphIndex >= paragraphs.length) return;
+
+    const fullText = paragraphs[currentParagraphIndex];
+
+    if (currentText.length < fullText.length) {
+      const timer = setTimeout(() => {
+        setCurrentText(fullText.slice(0, currentText.length + 1));
+      }, 30); // Speed of typing (30ms per letter)
+      return () => clearTimeout(timer);
+    } else {
+      const timer = setTimeout(() => {
+        setCompletedParagraphs((prev) => [...prev, fullText]);
+        setCurrentText("");
+        setCurrentParagraphIndex((prev) => prev + 1);
+      }, 600); // Small pause before starting the next paragraph
+      return () => clearTimeout(timer);
+    }
+  }, [started, currentText, currentParagraphIndex, paragraphs]);
+
+  const isFinished = currentParagraphIndex >= paragraphs.length;
+
+  return (
+    <div
+      className="flex-1 w-full min-w-0 self-start max-h-[55vh] sm:max-h-[60vh] overflow-y-auto pr-1 text-white/90"
+      style={{
+        fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif",
+        fontWeight: 200,
+        letterSpacing: "0.015em",
+      }}
+    >
+      {/* Renders paragraphs that are completely typed */}
+      {completedParagraphs.map((p, i) => (
+        <p key={i} className="mb-4 text-[14px] sm:text-[15px] md:text-base leading-relaxed sm:leading-[1.7]" style={{ textShadow: "0 1px 12px rgba(0, 10, 30, 0.6)" }}>
+          {p}
+        </p>
+      ))}
+      
+      {/* Renders the current paragraph with the blinking block cursor */}
+      {started && !isFinished && (
+        <p className="mb-4 text-[14px] sm:text-[15px] md:text-base leading-relaxed sm:leading-[1.7]" style={{ textShadow: "0 1px 12px rgba(0, 10, 30, 0.6)" }}>
+          {currentText}
+          <span className="animate-pulse ml-1 text-white">▌</span>
+        </p>
+      )}
+    </div>
   );
 }
