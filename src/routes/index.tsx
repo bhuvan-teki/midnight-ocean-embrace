@@ -206,6 +206,11 @@ function CinematicExperience() {
                 draggable={false}
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+
+            {/* --- NOTION-STYLE VERTICAL DIVIDER --- */}
+            <div className="hidden sm:block w-px bg-white/15 self-stretch rounded-full" />
+
+            {/* Story text — constrained to top-right area beside the map */}
             </button>
 
             {/* Story text — constrained to top-right area beside the map */}
