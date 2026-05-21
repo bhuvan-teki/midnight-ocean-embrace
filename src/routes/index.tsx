@@ -186,28 +186,48 @@ function CinematicExperience() {
         </button>
 
         {/* Content: map + story */}
-        <div className="relative z-10 h-full w-full overflow-hidden px-5 pt-20 pb-8 sm:px-10 sm:pt-24 sm:pb-12">
+        <div className="relative z-10 h-full w-full overflow-y-auto px-5 pt-20 pb-8 sm:px-10 sm:pt-24 sm:pb-12">
           <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
-            {/* Floating map image — click to open */}
-            <button
-              type="button"
-              onClick={() => setMapOpen(true)}
-              aria-label="View map full size"
-              className="group relative shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] aspect-[4/3] rounded-2xl overflow-hidden ring-1 ring-white/10 outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-              style={{
-                boxShadow:
-                  "0 20px 60px -10px rgba(0, 8, 30, 0.85), 0 8px 24px -8px rgba(40, 80, 160, 0.4)",
-                animation: "floatY 6s ease-in-out infinite",
-              }}
-            >
-              <img
-                src="/images/mapphind.jpeg"
-                alt="Map from Hyderabad to Sogod, Cebu"
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                draggable={false}
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
-            </button>
+            {/* --- MEMORY SCRAPBOOK STACK --- */}
+            <div className="relative shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] aspect-[4/3] mr-4 sm:mr-8 mb-8 sm:mb-0">
+              
+              {/* PAGE 2: The Video (Starts hidden behind the map, slides out after typing finishes) */}
+              <div 
+                className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden ring-1 ring-white/20 shadow-2xl z-10 transition-all duration-[1500ms] ease-out ${typingFinished ? 'opacity-100 translate-y-[25px] translate-x-[20px] rotate-[5deg]' : 'opacity-0 translate-y-0 translate-x-0 rotate-0'}`}
+              >
+                <video
+                  src="/videos/stillwemet.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover opacity-85"
+                />
+                <div className="absolute inset-0 bg-[#02061a]/30" />
+              </div>
+
+              {/* PAGE 1: The Map (Always on top, slightly tilted left) */}
+              <div style={{ transform: "rotate(-3deg)", transformOrigin: "center" }} className="absolute inset-0 z-20">
+                <button
+                  type="button"
+                  onClick={() => setMapOpen(true)}
+                  aria-label="View map full size"
+                  className="group w-full h-full rounded-2xl overflow-hidden ring-1 ring-white/10 outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                  style={{
+                    boxShadow: "0 20px 60px -10px rgba(0, 8, 30, 0.85), 0 8px 24px -8px rgba(40, 80, 160, 0.4)",
+                    animation: "floatY 6s ease-in-out infinite",
+                  }}
+                >
+                  <img
+                    src="/images/mapphind.jpeg"
+                    alt="Map from Hyderabad to Sogod, Cebu"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    draggable={false}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+                </button>
+              </div>
+            </div>
 
             {/* Story text — constrained to top-right area beside the map */}
             <StoryTypingAnimation 
@@ -233,6 +253,52 @@ function CinematicExperience() {
           >
             How It All Started...
           </h2>
+
+          {/* --- THE TIMELINE STORY --- */}
+          <div
+            className={`mt-16 flex w-full max-w-3xl mx-auto flex-col items-center justify-center space-y-16 text-center transition-all duration-[1500ms] delay-[1200ms] pb-24 ${typingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+            style={{
+              fontFamily: "'Jost', 'Inter', sans-serif",
+            }}
+          >
+            {/* Beat 1 */}
+            <div className="space-y-3">
+              <p className="text-white/50 tracking-[0.25em] text-xs sm:text-sm uppercase font-medium">July 10, 2025</p>
+              <p className="text-2xl sm:text-3xl font-light text-white/95" style={{ textShadow: "0 2px 15px rgba(0,0,0,0.8)" }}>
+                A random Thursday night.
+              </p>
+            </div>
+
+            {/* Beat 2 */}
+            <div className="space-y-3">
+              <p className="text-2xl sm:text-3xl font-light text-white/95" style={{ textShadow: "0 2px 15px rgba(0,0,0,0.8)" }}>
+                India. Philippines.
+              </p>
+            </div>
+
+            {/* Beat 3 */}
+            <div className="space-y-3">
+              <p className="text-2xl sm:text-3xl font-light text-white/90" style={{ textShadow: "0 2px 15px rgba(0,0,0,0.8)" }}>
+                8.2 billion people existed on Earth that day.
+              </p>
+            </div>
+
+            {/* Final Beat */}
+            <div className="space-y-4 pt-8">
+              <p 
+                className="text-4xl sm:text-5xl text-white" 
+                style={{ 
+                  fontFamily: "'Black Mango', serif", 
+                  textShadow: "0 0 20px rgba(173, 200, 255, 0.4), 0 0 40px rgba(110, 160, 255, 0.2)" 
+                }}
+              >
+                And somehow... I met you.
+              </p>
+              <p className="text-white/60 font-light text-sm sm:text-base tracking-wide mt-4">
+                A random chat. A random moment. A permanent connection.
+              </p>
+            </div>
+          </div>
           
         </div>
       </section>
