@@ -33,6 +33,7 @@ function CinematicExperience() {
   const [mapOpen, setMapOpen] = useState(false);
   const [storyStarted, setStoryStarted] = useState(false);
   const [typingFinished, setTypingFinished] = useState(false);
+  const [showPart3, setShowPart3] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const video1Ref = useRef<HTMLVideoElement>(null);
@@ -304,7 +305,7 @@ function CinematicExperience() {
           {/* --- CLICKABLE JOURNEY HEADING --- */}
           <div className={`w-full flex justify-center mt-12 mb-12 transition-all duration-1000 delay-700 ${typingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
             <button
-              onClick={() => alert("Ready for the next part!")} 
+              onClick={() => setShowPart3(true)} 
               className="group relative outline-none"
             >
               <h2
@@ -323,6 +324,45 @@ function CinematicExperience() {
               />
             </button>
           </div>
+
+          {/* --- PART 3: THE OMEGLE ORIGIN (REVEALED ON CLICK) --- */}
+          {showPart3 && (
+            <div 
+              className="w-full flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10 mt-4 pb-20"
+              style={{
+                opacity: 0,
+                animation: "lineReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards"
+              }}
+            >
+              {/* The Omegle Polaroid */}
+              <div 
+                className="shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] aspect-[4/3] rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden relative"
+                style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
+              >
+                <img
+                  src="/images/omeglememsgjpeg.jpeg"
+                  alt="Where we met"
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                  draggable={false}
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+              </div>
+
+              {/* Placeholder for the upcoming text */}
+              <div
+                className="flex-1 w-full min-w-0 self-start pr-1"
+                style={{
+                  fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif",
+                  fontWeight: 200,
+                  letterSpacing: "0.015em",
+                }}
+              >
+                <p className="text-white/50 italic animate-pulse text-[15px] sm:text-base mt-2">
+                  [Waiting for the Omegle story text... I will drop the typing animation here when you provide it!]
+                </p>
+              </div>
+            </div>
+          )}
           
         </div>
       </section>
