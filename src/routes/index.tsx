@@ -1188,6 +1188,21 @@ function CinematicExperience() {
 
                 <div className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row9TypingFinished ? "opacity-100" : "opacity-0"}`} />
               </div>
+
+              {/* ======================================= */}
+              {/* --- FINAL BIRTHDAY MESSAGE --- */}
+              {/* ======================================= */}
+              <div className={`w-full flex justify-center py-20 transition-all duration-1000 delay-500 ${row9TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+                <h1 
+                  className="text-center text-5xl sm:text-7xl md:text-8xl text-[#60a5fa] drop-shadow-[0_0_15px_rgba(96,165,250,0.5)]"
+                  style={{ 
+                    fontFamily: "'Plateau', serif",
+                    letterSpacing: "0.02em" 
+                  }}
+                >
+                  Happy Birthday, Laddu Babbbbyyy...
+                </h1>
+              </div>
             </div>
           )}
           
