@@ -57,6 +57,14 @@ const ROW7_STORY_PARAGRAPHS = [
   "you said, \"you're truly a blessing for us.\" that's where i knew. this wasn't just a relationship anymore. this was a direction. a decision. something we were both choosing, slowly, honestly, at our own pace. and i'm still standing on everything i said."
 ];
 
+const ROW8_STORY_PARAGRAPHS = [
+  "i went to Tiruvannamalai, Arunachalam — a 4 day trip for Lord Shiva's darshanam. no signal, no calls, just temples and silence. and i missed you the whole time.",
+  "while i was there, i found a small Vel — Lord Murugan's divine spear. the weapon his mother, Goddess Parvati, gave him. it represents protection, wisdom, the victory of good over evil. it's one of the most sacred things in our culture.",
+  "i picked it up and thought of you immediately. i didn't buy it for a temple. i bought it for you. my first ever gift to you — something from my world, my faith, my hands. i wanted to give you something that protects you even when i can't be there.",
+  "i also lit a flower at the goddess's shrine that day and sent you the picture. a pink lotus, held in my hand, offered at the temple — and then sent across the ocean to you.",
+  "that trip taught me something. distance doesn't stop love from finding its way. it just gets more creative."
+];
+
 const AUDIO_PLAYLIST = [
   "/audio/audio1.mp3.mpeg",
   "/audio/audio2.mp3.mpeg",
@@ -100,6 +108,8 @@ function CinematicExperience() {
   const row6ScrollRef = useRef<HTMLDivElement>(null);
   const [row7TypingFinished, setRow7TypingFinished] = useState(false);
   const row7ScrollRef = useRef<HTMLDivElement>(null);
+  const [row8TypingFinished, setRow8TypingFinished] = useState(false);
+  const row8ScrollRef = useRef<HTMLDivElement>(null);
   const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -390,6 +400,29 @@ function CinematicExperience() {
     }, 1500);
     return () => clearInterval(interval);
   }, [isHovered, row6TypingFinished]);
+
+  // --- ROW 8: AUTO-SWIPE BRAIN ---
+  useEffect(() => {
+    if (isHovered || !row7TypingFinished) return;
+
+    const interval = setInterval(() => {
+      if (row8ScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = row8ScrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll <= 0) return;
+        if (!row8ScrollRef.current.dataset.direction) row8ScrollRef.current.dataset.direction = 'right';
+        const swipeAmount = clientWidth + 24; 
+        if (row8ScrollRef.current.dataset.direction === 'right') {
+          row8ScrollRef.current.scrollBy({ left: swipeAmount, behavior: 'smooth' });
+          if (scrollLeft + clientWidth >= maxScroll - 10) row8ScrollRef.current.dataset.direction = 'left';
+        } else {
+          row8ScrollRef.current.scrollBy({ left: -swipeAmount, behavior: 'smooth' });
+          if (scrollLeft <= 10) row8ScrollRef.current.dataset.direction = 'right';
+        }
+      }
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [isHovered, row7TypingFinished]);
 
   // --- AUDIO CONTROLLER (Fade In & Playback) ---
   useEffect(() => {
@@ -1016,6 +1049,62 @@ function CinematicExperience() {
                 {/* --- ROW 7 SECTION DIVIDER --- */}
                 <div 
                   className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row7TypingFinished ? "opacity-100" : "opacity-0"}`} 
+                />
+              </div>
+              {/* ======================================= */}
+              {/* --- ROW 8 SECTION (Gift & Trip) --- */}
+              {/* ======================================= */}
+              <div 
+                className={`w-full pb-20 transition-all duration-1000 delay-300 ${row7TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+              >
+                <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+                  
+                  {/* Images Column */}
+                  <div
+                    ref={row8ScrollRef}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
+                  >
+                    {[
+                      { src: "/images/my1stgift.jpeg", alt: "My first gift" },
+                      { src: "/images/flowerforu.jpeg", alt: "Flower for you" },
+                    ].map((img, index) => (
+                      <div 
+                        key={index} 
+                        className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                        style={{ 
+                          transform: index % 2 === 0 ? "rotate(-2deg)" : "rotate(1.5deg)", 
+                          animation: `floatY 6s ease-in-out infinite ${index * 0.3}s` 
+                        }}
+                        onClick={() => setActiveMedia({ src: img.src, type: "image" })}
+                      >
+                        <img 
+                          src={img.src} 
+                          alt={img.alt} 
+                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]" 
+                          draggable={false} 
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Text Column */}
+                  <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
+                    {row7TypingFinished && (
+                      <StoryTypingAnimation 
+                        paragraphs={ROW8_STORY_PARAGRAPHS} 
+                        started={row7TypingFinished} 
+                        onComplete={() => setRow8TypingFinished(true)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* --- ROW 8 SECTION DIVIDER --- */}
+                <div 
+                  className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row8TypingFinished ? "opacity-100" : "opacity-0"}`} 
                 />
               </div>
             </div>
