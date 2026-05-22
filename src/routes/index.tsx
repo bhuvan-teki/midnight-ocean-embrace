@@ -50,9 +50,11 @@ const ROW6_STORY_PARAGRAPHS = [
 ];
 
 const ROW7_STORY_PARAGRAPHS = [
-  "Sometimes I scroll all the way up to our very first messages. Back when we were just starting to figure each other out, sending long paragraphs and staying up way too late.",
-  "Reading those early texts brings back the exact same butterflies I felt back then. Every sweet word, every promise... we meant every single one of them.",
-  "It's beautiful to look back and see how our love story was being written right there on the screen, message by message."
+  "at some point you told me honestly — you're still figuring out your future. your family comes first. you needed me to understand that before anything else.",
+  "and i did. i told you i'm not going anywhere. i introduced you to my sister. i told you i'm gonna marry you. not out of impulse — out of certainty. i said it clearly, no games, no pressure. \"i'm working hard for you. i took you seriously. i want to meet you in person and treat you like a princess.\"",
+  "you said you were speechless. and when you asked me — \"what if you get tired of waiting for me, bhuvy?\" — i didn't flinch. i said, do you really think i'd leave you? i'm not waiting and counting days. i'm building. for us. for our future.",
+  "you focus on your studies, i'll focus on mine, and once everything is set — we travel the whole world together. japan first, you said. so japan first.",
+  "you said, \"you're truly a blessing for us.\" that's where i knew. this wasn't just a relationship anymore. this was a direction. a decision. something we were both choosing, slowly, honestly, at our own pace. and i'm still standing on everything i said."
 ];
 
 const AUDIO_PLAYLIST = [
