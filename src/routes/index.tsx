@@ -436,10 +436,9 @@ function CinematicExperience() {
               </a>
             </div>
 
-            {/* --- NOTION-STYLE DIVIDER --- */}
-            {/* Fades in softly after the Omegle link with a longer delay */}
-            <div className={`w-full mt-10 mb-6 transition-all duration-1000 delay-700 ${omegleTypingFinished ? "opacity-100" : "opacity-0"}`}>
-              <hr className="border-0 h-[1px] bg-white/10" />
+            {/* --- MAIN SECTION DIVIDER --- */}
+            <div className={`w-full mt-24 mb-16 transition-all duration-1000 delay-700 ${omegleTypingFinished ? "opacity-100" : "opacity-0"}`}>
+              <hr className="border-0 h-[1px] bg-white/20" />
             </div>
             {/* ---------------------------- */}
               </div>
