@@ -65,6 +65,14 @@ const ROW8_STORY_PARAGRAPHS = [
   "that trip taught me something. distance doesn't stop love from finding its way. it just gets more creative."
 ];
 
+const ROW9_STORY_PARAGRAPHS = [
+  "you look like a cute little puppy sometimes. soft, warm, just existing — and i melt completely.",
+  "then you judge me. that one look. you don't even have to say anything, your face says it all.",
+  "then you get angry when i mess up. full silence mode. pout activated. zero mercy.",
+  "and then you're naughty the next second like nothing happened.",
+  "laddu, you're everything in one person. and i love every version of you."
+];
+
 const AUDIO_PLAYLIST = [
   "/audio/audio1.mp3.mpeg",
   "/audio/audio2.mp3.mpeg",
@@ -110,6 +118,8 @@ function CinematicExperience() {
   const row7ScrollRef = useRef<HTMLDivElement>(null);
   const [row8TypingFinished, setRow8TypingFinished] = useState(false);
   const row8ScrollRef = useRef<HTMLDivElement>(null);
+  const [row9TypingFinished, setRow9TypingFinished] = useState(false);
+  const row9ScrollRef = useRef<HTMLDivElement>(null);
   const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -423,6 +433,29 @@ function CinematicExperience() {
     }, 1500);
     return () => clearInterval(interval);
   }, [isHovered, row7TypingFinished]);
+
+  // --- ROW 9: AUTO-SWIPE BRAIN ---
+  useEffect(() => {
+    if (isHovered || !row8TypingFinished) return;
+
+    const interval = setInterval(() => {
+      if (row9ScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = row9ScrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll <= 0) return;
+        if (!row9ScrollRef.current.dataset.direction) row9ScrollRef.current.dataset.direction = 'right';
+        const swipeAmount = clientWidth + 24; 
+        if (row9ScrollRef.current.dataset.direction === 'right') {
+          row9ScrollRef.current.scrollBy({ left: swipeAmount, behavior: 'smooth' });
+          if (scrollLeft + clientWidth >= maxScroll - 10) row9ScrollRef.current.dataset.direction = 'left';
+        } else {
+          row9ScrollRef.current.scrollBy({ left: -swipeAmount, behavior: 'smooth' });
+          if (scrollLeft <= 10) row9ScrollRef.current.dataset.direction = 'right';
+        }
+      }
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [isHovered, row8TypingFinished]);
 
   // --- AUDIO CONTROLLER (Fade In & Playback) ---
   useEffect(() => {
@@ -1106,6 +1139,55 @@ function CinematicExperience() {
                 <div 
                   className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row8TypingFinished ? "opacity-100" : "opacity-0"}`} 
                 />
+              </div>
+              {/* ======================================= */}
+              {/* --- ROW 9 SECTION (Everything Version) --- */}
+              {/* ======================================= */}
+              <div 
+                className={`w-full pb-20 transition-all duration-1000 delay-300 ${row8TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+              >
+                <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+                  
+                  <div
+                    ref={row9ScrollRef}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
+                  >
+                    {[
+                      { src: "/images/cute.jpeg", alt: "Cute" },
+                      { src: "/images/angry.jpeg", alt: "Angry" },
+                      { src: "/images/pout.jpeg", alt: "Pout" },
+                      { src: "/images/naughty.jpeg", alt: "Naughty" },
+                      { src: "/images/everything.jpeg", alt: "Everything" },
+                    ].map((img, index) => (
+                      <div 
+                        key={index} 
+                        className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                        style={{ 
+                          transform: index % 2 === 0 ? "rotate(-2deg)" : "rotate(1.5deg)", 
+                          animation: `floatY 6s ease-in-out infinite ${index * 0.3}s` 
+                        }}
+                        onClick={() => setActiveMedia({ src: img.src, type: "image" })}
+                      >
+                        <img src={img.src} alt={img.alt} className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]" draggable={false} />
+                        <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
+                    {row8TypingFinished && (
+                      <StoryTypingAnimation 
+                        paragraphs={ROW9_STORY_PARAGRAPHS} 
+                        started={row8TypingFinished} 
+                        onComplete={() => setRow9TypingFinished(true)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row9TypingFinished ? "opacity-100" : "opacity-0"}`} />
               </div>
             </div>
           )}
