@@ -49,6 +49,12 @@ const ROW6_STORY_PARAGRAPHS = [
   "it's the smallest thing. but it's also everything."
 ];
 
+const ROW7_STORY_PARAGRAPHS = [
+  "Sometimes I scroll all the way up to our very first messages. Back when we were just starting to figure each other out, sending long paragraphs and staying up way too late.",
+  "Reading those early texts brings back the exact same butterflies I felt back then. Every sweet word, every promise... we meant every single one of them.",
+  "It's beautiful to look back and see how our love story was being written right there on the screen, message by message."
+];
+
 const AUDIO_PLAYLIST = [
   "/audio/audio1.mp3.mpeg",
   "/audio/audio2.mp3.mpeg",
@@ -90,6 +96,8 @@ function CinematicExperience() {
   const row5ScrollRef = useRef<HTMLDivElement>(null);
   const [row6TypingFinished, setRow6TypingFinished] = useState(false);
   const row6ScrollRef = useRef<HTMLDivElement>(null);
+  const [row7TypingFinished, setRow7TypingFinished] = useState(false);
+  const row7ScrollRef = useRef<HTMLDivElement>(null);
   const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -357,6 +365,29 @@ function CinematicExperience() {
     }, 1500);
     return () => clearInterval(interval);
   }, [isHovered, row5TypingFinished]);
+
+  // --- ROW 7: AUTO-SWIPE BRAIN ---
+  useEffect(() => {
+    if (isHovered || !row6TypingFinished) return;
+
+    const interval = setInterval(() => {
+      if (row7ScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = row7ScrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll <= 0) return;
+        if (!row7ScrollRef.current.dataset.direction) row7ScrollRef.current.dataset.direction = 'right';
+        const swipeAmount = clientWidth + 24; 
+        if (row7ScrollRef.current.dataset.direction === 'right') {
+          row7ScrollRef.current.scrollBy({ left: swipeAmount, behavior: 'smooth' });
+          if (scrollLeft + clientWidth >= maxScroll - 10) row7ScrollRef.current.dataset.direction = 'left';
+        } else {
+          row7ScrollRef.current.scrollBy({ left: -swipeAmount, behavior: 'smooth' });
+          if (scrollLeft <= 10) row7ScrollRef.current.dataset.direction = 'right';
+        }
+      }
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [isHovered, row6TypingFinished]);
 
   // --- AUDIO CONTROLLER (Fade In & Playback) ---
   useEffect(() => {
@@ -920,6 +951,69 @@ function CinematicExperience() {
                 {/* --- ROW 6 SECTION DIVIDER --- */}
                 <div 
                   className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row6TypingFinished ? "opacity-100" : "opacity-0"}`} 
+                />
+              </div>
+
+              {/* ======================================= */}
+              {/* --- ROW 7 SECTION (Early Love Messages) --- */}
+              {/* ======================================= */}
+              <div 
+                className={`w-full pb-20 transition-all duration-1000 delay-300 ${row6TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+              >
+                <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+                  
+                  {/* Images Column */}
+                  <div
+                    ref={row7ScrollRef}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
+                  >
+                    
+                    {/* Map through the message screenshots */}
+                    {[
+                      { src: "/images/lovemsg.jpeg", alt: "Love Message 1" },
+                      { src: "/images/lovemsg2.jpeg", alt: "Love Message 2" },
+                      { src: "/images/lovemsg3.jpeg", alt: "Love Message 3" },
+                      { src: "/images/lovemsg4.jpeg", alt: "Love Message 4" },
+                      { src: "/images/lovemsg5.jpeg", alt: "Love Message 5" },
+                    ].map((img, index) => (
+                      <div 
+                        key={index} 
+                        className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                        style={{ 
+                          transform: index % 2 === 0 ? "rotate(-2deg)" : "rotate(1.5deg)", 
+                          animation: `floatY 6s ease-in-out infinite ${index * 0.3}s` 
+                        }}
+                        onClick={() => setActiveMedia({ src: img.src, type: "image" })}
+                      >
+                        <img 
+                          src={img.src} 
+                          alt={img.alt} 
+                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]" 
+                          draggable={false} 
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Text Column */}
+                  <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
+                    {/* Only start typing when Row 6 finishes */}
+                    {row6TypingFinished && (
+                      <StoryTypingAnimation 
+                        paragraphs={ROW7_STORY_PARAGRAPHS} 
+                        started={row6TypingFinished} 
+                        onComplete={() => setRow7TypingFinished(true)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* --- ROW 7 SECTION DIVIDER --- */}
+                <div 
+                  className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row7TypingFinished ? "opacity-100" : "opacity-0"}`} 
                 />
               </div>
             </div>
