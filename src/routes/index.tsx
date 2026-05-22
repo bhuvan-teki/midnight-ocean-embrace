@@ -442,7 +442,7 @@ function CinematicExperience() {
                   </a>
                 </div>
               </div>
-            </div> {/* <-- Make sure there are only TWO closing divs right here! */}
+            </div>
           )}
           
         </div>
