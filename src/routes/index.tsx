@@ -767,6 +767,7 @@ function CinematicExperience() {
                 />
               </div>
             </div>
+            </div>
           )}
           
         </div>
