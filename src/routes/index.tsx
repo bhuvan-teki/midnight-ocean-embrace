@@ -421,29 +421,28 @@ function CinematicExperience() {
                 </div>
               </div>
 
-              <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em", }}>
-  <StoryTypingAnimation 
-    paragraphs={OMEGLE_STORY_PARAGRAPHS} 
-    started={showPart3} 
-    onComplete={() => setOmegleTypingFinished(true)}
-  />
-  
-  {/* The clickable link that fades in after typing finishes */}
-  <div className={`mt-2 text-[14px] sm:text-[15px] md:text-base transition-all duration-1000 delay-300 ${omegleTypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
-    <span className="text-white/90">where we met: </span>
-    <a 
-      href="https://omegleapp.me/chat/" 
-      target="_blank" 
-      rel="noopener noreferrer" 
-      className="text-blue-400 hover:text-blue-300 underline transition-colors"
-      style={{ textShadow: "0 0 10px rgba(96, 165, 250, 0.4)" }}
-    >
-      https://omegleapp.me/chat/
-    </a>
-  </div>
-</div>
-</div>
-            </div>
+             <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em", }}>
+                <StoryTypingAnimation 
+                  paragraphs={OMEGLE_STORY_PARAGRAPHS} 
+                  started={showPart3} 
+                  onComplete={() => setOmegleTypingFinished(true)}
+                />
+                
+                {/* The clickable link that fades in after typing finishes */}
+                <div className={`mt-2 text-[14px] sm:text-[15px] md:text-base transition-all duration-1000 delay-300 ${omegleTypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+                  <span className="text-white/90">where we met: </span>
+                  <a 
+                    href="https://omegleapp.me/chat/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-blue-400 hover:text-blue-300 underline transition-colors"
+                    style={{ textShadow: "0 0 10px rgba(96, 165, 250, 0.4)" }}
+                  >
+                    https://omegleapp.me/chat/
+                  </a>
+                </div>
+              </div>
+            </div> {/* <-- Make sure there are only TWO closing divs right here! */}
           )}
           
         </div>
