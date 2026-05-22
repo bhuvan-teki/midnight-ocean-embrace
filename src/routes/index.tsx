@@ -1155,11 +1155,10 @@ function CinematicExperience() {
                     className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
                   >
                     {[
-                      { src: "/images/cute.jpeg", alt: "Cute" },
-                      { src: "/images/angry.jpeg", alt: "Angry" },
-                      { src: "/images/pout.jpeg", alt: "Pout" },
-                      { src: "/images/naughty.jpeg", alt: "Naughty" },
-                      { src: "/images/everything.jpeg", alt: "Everything" },
+                      { src: "/images/puppyladdu.jpeg", alt: "Cute puppy" },
+                      { src: "/images/judgingladdu.jpeg", alt: "Judging" },
+                      { src: "/images/angryladdu.jpeg", alt: "Angry" },
+                      { src: "/images/sillyladdu.jpeg", alt: "Silly/Naughty" },
                     ].map((img, index) => (
                       <div 
                         key={index} 
