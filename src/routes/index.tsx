@@ -1194,13 +1194,13 @@ function CinematicExperience() {
               {/* ======================================= */}
               <div className={`w-full flex justify-center py-20 transition-all duration-1000 delay-500 ${row9TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
                 <h1 
-                  className="text-center text-5xl sm:text-7xl md:text-8xl text-[#60a5fa] drop-shadow-[0_0_15px_rgba(96,165,250,0.5)]"
+                  className="text-center text-5xl sm:text-7xl md:text-8xl text-white/95"
                   style={{ 
-                    fontFamily: "'Plateau', serif",
-                    letterSpacing: "0.02em" 
+                    fontFamily: "'Italianno', cursive",
+                    textShadow: "0 0 12px rgba(173, 200, 255, 0.55), 0 0 30px rgba(110, 160, 255, 0.45), 0 0 60px rgba(70, 120, 220, 0.35)",
                   }}
                 >
-                  Happy Birthday, Laddu Babbbbyyy...
+                  Happy Birthday, Laddu Babby
                 </h1>
               </div>
             </div>
