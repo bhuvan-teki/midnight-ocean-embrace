@@ -16,6 +16,11 @@ const OMEGLE_STORY_PARAGRAPHS = [
   "That's how it started. That's how I found you in 8.2 billion people."
 ];
 
+const ROW3_STORY_PARAGRAPHS = [
+  "Add your story about the reposts and the GPT research here.",
+  "You can write as many paragraphs as you need for this section."
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -41,6 +46,8 @@ function CinematicExperience() {
   const [typingFinished, setTypingFinished] = useState(false);
   const [showPart3, setShowPart3] = useState(false);
   const [omegleTypingFinished, setOmegleTypingFinished] = useState(false); // Add this new line!
+  const [row3TypingFinished, setRow3TypingFinished] = useState(false);
+  const row3ScrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   
   // New Universal Lightbox States
@@ -174,6 +181,29 @@ function CinematicExperience() {
 
     return () => clearInterval(interval);
   }, [isHovered, storyStarted]);
+
+  // --- ROW 3: AUTO-SWIPE BRAIN ---
+  useEffect(() => {
+    if (isHovered || !omegleTypingFinished) return;
+
+    const interval = setInterval(() => {
+      if (row3ScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = row3ScrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll <= 0) return;
+        if (!row3ScrollRef.current.dataset.direction) row3ScrollRef.current.dataset.direction = 'right';
+        const swipeAmount = clientWidth + 24; 
+        if (row3ScrollRef.current.dataset.direction === 'right') {
+          row3ScrollRef.current.scrollBy({ left: swipeAmount, behavior: 'smooth' });
+          if (scrollLeft + clientWidth >= maxScroll - 10) row3ScrollRef.current.dataset.direction = 'left';
+        } else {
+          row3ScrollRef.current.scrollBy({ left: -swipeAmount, behavior: 'smooth' });
+          if (scrollLeft <= 10) row3ScrollRef.current.dataset.direction = 'right';
+        }
+      }
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [isHovered, omegleTypingFinished]);
 
   // --- PART 3: AUTO-SWIPE BRAIN ---
   useEffect(() => {
@@ -447,6 +477,70 @@ function CinematicExperience() {
               <div 
                 className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${omegleTypingFinished ? "opacity-100" : "opacity-0"}`} 
               />
+
+              {/* ======================================= */}
+              {/* --- ROW 3 SECTION --- */}
+              {/* ======================================= */}
+              <div 
+                className={`w-full mt-4 pb-20 transition-all duration-1000 delay-300 ${omegleTypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+              >
+                <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+                  
+                  {/* Images Column (reposts & gptresearch) */}
+                  <div
+                    ref={row3ScrollRef}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
+                  >
+                    {/* Image 1: Reposts */}
+                    <div 
+                      className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                      style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
+                      onClick={() => setActiveMedia({ src: "/images/reposts.jpeg", type: "image" })}
+                    >
+                      <img
+                        src="/images/reposts.jpeg"
+                        alt="Reposts"
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                        draggable={false}
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+                    </div>
+
+                    {/* Image 2: GPT Research */}
+                    <div 
+                      className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                      style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.4s" }}
+                      onClick={() => setActiveMedia({ src: "/images/gptresearch.jpeg", type: "image" })}
+                    >
+                      <img
+                        src="/images/gptresearch.jpeg"
+                        alt="GPT Research"
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                        draggable={false}
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                    </div>
+                  </div>
+
+                  {/* Text Column */}
+                  <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
+                    {omegleTypingFinished && (
+                      <StoryTypingAnimation 
+                        paragraphs={ROW3_STORY_PARAGRAPHS} 
+                        started={omegleTypingFinished} 
+                        onComplete={() => setRow3TypingFinished(true)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* --- ROW 3 SECTION DIVIDER --- */}
+                <div 
+                  className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row3TypingFinished ? "opacity-100" : "opacity-0"}`} 
+                />
+              </div>
               
             </div>
           )}
