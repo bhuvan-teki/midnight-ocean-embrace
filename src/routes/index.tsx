@@ -526,6 +526,20 @@ function CinematicExperience() {
                       />
                       <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
                     </div>
+                    {/* Image 3: Feb 14 Group Photo */}
+                    <div 
+                      className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                      style={{ transform: "rotate(-1.5deg)", animation: "floatY 6s ease-in-out infinite 0.8s" }}
+                      onClick={() => setActiveMedia({ src: "/images/feb14pic.jpeg", type: "image" })}
+                    >
+                      <img
+                        src="/images/feb14pic.jpeg"
+                        alt="February 14 Group Photo"
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                        draggable={false}
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                    </div>
                   </div>
 
                   {/* Text Column */}
