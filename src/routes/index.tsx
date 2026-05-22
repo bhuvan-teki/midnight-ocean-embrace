@@ -33,6 +33,16 @@ const ROW4_STORY_PARAGRAPHS = [
   "every argument just proved it more. we weren't going anywhere."
 ];
 
+const ROW5_STORY_PARAGRAPHS = [
+  "for a long time, i never saw your face. we were in a relationship and i couldn't see you — no video, no audio, just text. your front cam was broken and there was no privacy. i understood, but honestly it was hard. being this far from you and not even being able to see you felt like missing a piece of something important.",
+  "i asked multiple times. i just wanted to see you. even once.",
+  "then one day you texted me from the mall. you were there with your mum, buying an x-pad for your studies.",
+  "i don't think you knew what that meant to me in that moment.",
+  "that x-pad had a camera.",
+  "and from that day, everything changed. i finally saw you — really saw you — not just a profile photo, not a group picture i had to ask you to point yourself out in. you. live. talking to me.",
+  "we've been on a video call every single day since then. and every time, it still feels like the first time i got to see your face."
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -62,6 +72,8 @@ function CinematicExperience() {
   const row3ScrollRef = useRef<HTMLDivElement>(null);
   const [row4TypingFinished, setRow4TypingFinished] = useState(false);
   const row4ScrollRef = useRef<HTMLDivElement>(null);
+  const [row5TypingFinished, setRow5TypingFinished] = useState(false);
+  const row5ScrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   
   // New Universal Lightbox States
@@ -275,6 +287,29 @@ function CinematicExperience() {
     }, 1500);
     return () => clearInterval(interval);
   }, [isHovered, row3TypingFinished]);
+
+  // --- ROW 5: AUTO-SWIPE BRAIN ---
+  useEffect(() => {
+    if (isHovered || !row4TypingFinished) return;
+
+    const interval = setInterval(() => {
+      if (row5ScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = row5ScrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll <= 0) return;
+        if (!row5ScrollRef.current.dataset.direction) row5ScrollRef.current.dataset.direction = 'right';
+        const swipeAmount = clientWidth + 24; 
+        if (row5ScrollRef.current.dataset.direction === 'right') {
+          row5ScrollRef.current.scrollBy({ left: swipeAmount, behavior: 'smooth' });
+          if (scrollLeft + clientWidth >= maxScroll - 10) row5ScrollRef.current.dataset.direction = 'left';
+        } else {
+          row5ScrollRef.current.scrollBy({ left: -swipeAmount, behavior: 'smooth' });
+          if (scrollLeft <= 10) row5ScrollRef.current.dataset.direction = 'right';
+        }
+      }
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [isHovered, row4TypingFinished]);
 
   return (
     <main className="fixed inset-0 overflow-hidden bg-black text-white select-none">
@@ -656,6 +691,71 @@ function CinematicExperience() {
                 {/* --- ROW 4 SECTION DIVIDER --- */}
                 <div 
                   className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row4TypingFinished ? "opacity-100" : "opacity-0"}`} 
+                />
+              </div>
+
+              {/* ======================================= */}
+              {/* --- ROW 5 SECTION (Video Calls) --- */}
+              {/* ======================================= */}
+              <div 
+                className={`w-full mt-4 pb-20 transition-all duration-1000 delay-300 ${row4TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+              >
+                <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+                  
+                  {/* Images Column */}
+                  <div
+                    ref={row5ScrollRef}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
+                  >
+                    {/* Image 1: Video Call 1 */}
+                    <div 
+                      className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                      style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
+                      onClick={() => setActiveMedia({ src: "/images/videocall1.png", type: "image" })}
+                    >
+                      <img
+                        src="/images/videocall1.png"
+                        alt="Video Call Memory 1"
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                        draggable={false}
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+                    </div>
+
+                    {/* Image 2: Video Call 2 */}
+                    <div 
+                      className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                      style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.4s" }}
+                      onClick={() => setActiveMedia({ src: "/images/videocall2.png", type: "image" })}
+                    >
+                      <img
+                        src="/images/videocall2.png"
+                        alt="Video Call Memory 2"
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                        draggable={false}
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                    </div>
+                  </div>
+
+                  {/* Text Column */}
+                  <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
+                    {/* Only start typing when Row 4 finishes */}
+                    {row4TypingFinished && (
+                      <StoryTypingAnimation 
+                        paragraphs={ROW5_STORY_PARAGRAPHS} 
+                        started={row4TypingFinished} 
+                        onComplete={() => setRow5TypingFinished(true)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* --- ROW 5 SECTION DIVIDER --- */}
+                <div 
+                  className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row5TypingFinished ? "opacity-100" : "opacity-0"}`} 
                 />
               </div>
             </div>
