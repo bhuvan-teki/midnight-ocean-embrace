@@ -1319,7 +1319,7 @@ function CinematicExperience() {
 }
 
 function TimeTogether() {
-  const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0 });
+  const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
 
   useEffect(() => {
     // The exact day you met: July 10, 2025
@@ -1327,42 +1327,67 @@ function TimeTogether() {
     
     const calculateTime = () => {
       const now = new Date();
-      // Ensure it doesn't go negative if testing before the date
+      // Ensure it doesn't go negative
       const diff = Math.max(0, now.getTime() - startDate.getTime()); 
       
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      const milliseconds = Math.floor(diff % 1000);
       
-      setTime({ days, hours, minutes });
+      setTime({ days, hours, minutes, seconds, milliseconds });
     };
 
     calculateTime(); // Set initial time immediately
-    const interval = setInterval(calculateTime, 60000); // Update automatically every 60 seconds
+    
+    // Update every 10 milliseconds for a super smooth, rapid-fire millisecond tick!
+    const interval = setInterval(calculateTime, 10); 
     return () => clearInterval(interval);
   }, []);
 
+  // Helper to make numbers look pretty (e.g., "05" instead of just "5")
+  const pad = (num: number, length: number = 2) => num.toString().padStart(length, '0');
+
   return (
     <div className="w-full flex justify-center mb-16 mt-4">
-      <div className="flex flex-wrap justify-center gap-8 sm:gap-16 py-6 px-10 rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-sm shadow-2xl">
+      <div className="flex flex-wrap justify-center gap-6 sm:gap-10 py-6 px-6 sm:px-12 rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-sm shadow-2xl w-[90%] max-w-4xl">
+        
         <div className="flex flex-col items-center">
-          <span className="text-5xl sm:text-7xl text-[#60a5fa]" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
+          <span className="text-4xl sm:text-6xl md:text-7xl text-[#60a5fa] font-variant-numeric: tabular-nums" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
             {time.days}
           </span>
-          <span className="text-sm sm:text-base uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Days</span>
+          <span className="text-xs sm:text-sm uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Days</span>
         </div>
+        
         <div className="flex flex-col items-center">
-          <span className="text-5xl sm:text-7xl text-[#60a5fa]" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
-            {time.hours}
+          <span className="text-4xl sm:text-6xl md:text-7xl text-[#60a5fa] font-variant-numeric: tabular-nums" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
+            {pad(time.hours)}
           </span>
-          <span className="text-sm sm:text-base uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Hours</span>
+          <span className="text-xs sm:text-sm uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Hours</span>
         </div>
+        
         <div className="flex flex-col items-center">
-          <span className="text-5xl sm:text-7xl text-[#60a5fa]" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
-            {time.minutes}
+          <span className="text-4xl sm:text-6xl md:text-7xl text-[#60a5fa] font-variant-numeric: tabular-nums" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
+            {pad(time.minutes)}
           </span>
-          <span className="text-sm sm:text-base uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Minutes</span>
+          <span className="text-xs sm:text-sm uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Mins</span>
         </div>
+
+        <div className="flex flex-col items-center">
+          <span className="text-4xl sm:text-6xl md:text-7xl text-[#60a5fa] font-variant-numeric: tabular-nums" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
+            {pad(time.seconds)}
+          </span>
+          <span className="text-xs sm:text-sm uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Secs</span>
+        </div>
+
+        <div className="flex flex-col items-center">
+          <span className="text-4xl sm:text-6xl md:text-7xl text-blue-300 font-variant-numeric: tabular-nums" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)", width: "3ch", textAlign: "left" }}>
+            {pad(time.milliseconds, 3)}
+          </span>
+          <span className="text-xs sm:text-sm uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>ms</span>
+        </div>
+
       </div>
     </div>
   );
