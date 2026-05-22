@@ -698,7 +698,7 @@ function CinematicExperience() {
               {/* --- ROW 5 SECTION (Video Calls) --- */}
               {/* ======================================= */}
               <div 
-                className={`w-full mt-4 pb-20 transition-all duration-1000 delay-300 ${row4TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+                className={`w-full pb-20 transition-all duration-1000 delay-300 ${row4TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
               >
                 <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
                   
