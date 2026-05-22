@@ -80,6 +80,8 @@ function CinematicExperience() {
   const row4ScrollRef = useRef<HTMLDivElement>(null);
   const [row5TypingFinished, setRow5TypingFinished] = useState(false);
   const row5ScrollRef = useRef<HTMLDivElement>(null);
+  const [row6TypingFinished, setRow6TypingFinished] = useState(false);
+  const row6ScrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   
   // New Universal Lightbox States
@@ -316,6 +318,29 @@ function CinematicExperience() {
     }, 1500);
     return () => clearInterval(interval);
   }, [isHovered, row4TypingFinished]);
+
+  // --- ROW 6: AUTO-SWIPE BRAIN ---
+  useEffect(() => {
+    if (isHovered || !row5TypingFinished) return;
+
+    const interval = setInterval(() => {
+      if (row6ScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = row6ScrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll <= 0) return;
+        if (!row6ScrollRef.current.dataset.direction) row6ScrollRef.current.dataset.direction = 'right';
+        const swipeAmount = clientWidth + 24; 
+        if (row6ScrollRef.current.dataset.direction === 'right') {
+          row6ScrollRef.current.scrollBy({ left: swipeAmount, behavior: 'smooth' });
+          if (scrollLeft + clientWidth >= maxScroll - 10) row6ScrollRef.current.dataset.direction = 'left';
+        } else {
+          row6ScrollRef.current.scrollBy({ left: -swipeAmount, behavior: 'smooth' });
+          if (scrollLeft <= 10) row6ScrollRef.current.dataset.direction = 'right';
+        }
+      }
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [isHovered, row5TypingFinished]);
 
   return (
     <main className="fixed inset-0 overflow-hidden bg-black text-white select-none">
