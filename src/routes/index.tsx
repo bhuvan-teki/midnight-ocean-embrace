@@ -43,6 +43,12 @@ const ROW5_STORY_PARAGRAPHS = [
   "we've been on a video call every single day since then. and every time, it still feels like the first time i got to see your face."
 ];
 
+const ROW6_STORY_PARAGRAPHS = [
+  "you've sent me pictures over these months. candid ones, random ones, ones you probably didn't think twice about sending. but i saved every single one. i have a whole folder — just you.",
+  "and every night, before i sleep, i look at them. and i kiss your picture — and that's how i fall asleep. with you.",
+  "it's the smallest thing. but it's also everything."
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -777,6 +783,69 @@ function CinematicExperience() {
                 {/* --- ROW 5 SECTION DIVIDER --- */}
                 <div 
                   className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row5TypingFinished ? "opacity-100" : "opacity-0"}`} 
+                />
+              </div>
+              {/* ======================================= */}
+              {/* --- ROW 6 SECTION (Favorite Pics) --- */}
+              {/* ======================================= */}
+              <div 
+                className={`w-full pb-20 transition-all duration-1000 delay-300 ${row5TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+              >
+                <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+                  
+                  {/* Images Column */}
+                  <div
+                    ref={row6ScrollRef}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
+                  >
+                    
+                    {/* Map through the images in your exact order */}
+                    {[
+                      { src: "/images/alltimefav.jpeg", alt: "All time favorite" },
+                      { src: "/images/favpic4.jpeg", alt: "Favorite pic 4" },
+                      { src: "/images/sleepy.jpeg", alt: "Sleepy" },
+                      { src: "/images/favpic3.jpeg", alt: "Favorite pic 3" },
+                      { src: "/images/favpic1.jpeg", alt: "Favorite pic 1" },
+                      { src: "/images/favpic.jpeg", alt: "Favorite pic" },
+                    ].map((img, index) => (
+                      <div 
+                        key={index} 
+                        className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                        style={{ 
+                          transform: index % 2 === 0 ? "rotate(-2deg)" : "rotate(1.5deg)", 
+                          animation: `floatY 6s ease-in-out infinite ${index * 0.3}s` 
+                        }}
+                        onClick={() => setActiveMedia({ src: img.src, type: "image" })}
+                      >
+                        <img 
+                          src={img.src} 
+                          alt={img.alt} 
+                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]" 
+                          draggable={false} 
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Text Column */}
+                  <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
+                    {/* Only start typing when Row 5 finishes */}
+                    {row5TypingFinished && (
+                      <StoryTypingAnimation 
+                        paragraphs={ROW6_STORY_PARAGRAPHS} 
+                        started={row5TypingFinished} 
+                        onComplete={() => setRow6TypingFinished(true)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* --- ROW 6 SECTION DIVIDER --- */}
+                <div 
+                  className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row6TypingFinished ? "opacity-100" : "opacity-0"}`} 
                 />
               </div>
             </div>
