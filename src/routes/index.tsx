@@ -378,70 +378,76 @@ function CinematicExperience() {
           {/* --- PART 3: THE OMEGLE ORIGIN --- */}
           {showPart3 && (
             <div 
-              className="w-full flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10 mt-4 pb-20"
+              className="w-full mt-4 pb-20"
               style={{
                 opacity: 0,
                 animation: "lineReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards"
               }}
             >
-              <div
-                ref={part3ScrollRef}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
-              >
-                {/* Image 1: The Omegle Polaroid */}
-                <div 
-                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
-                  style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
-                  onClick={() => setActiveMedia({ src: "/images/omeglememsgjpeg.jpeg", type: "image" })}
-                >
-                  <img
-                    src="/images/omeglememsgjpeg.jpeg"
-                    alt="Where we met"
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
-                    draggable={false}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
-                </div>
-
-                {/* Image 2: The Follow Back Polaroid */}
-                <div 
-                  className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
-                  style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.4s" }}
-                  onClick={() => setActiveMedia({ src: "/images/followback.jpeg", type: "image" })}
-                >
-                  <img
-                    src="/images/followback.jpeg"
-                    alt="The Follow Back"
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
-                    draggable={false}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
-                </div>
-              </div>
-
-             <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em", }}>
-                <StoryTypingAnimation 
-                  paragraphs={OMEGLE_STORY_PARAGRAPHS} 
-                  started={showPart3} 
-                  onComplete={() => setOmegleTypingFinished(true)}
-                />
+              {/* Flex container holding both images and text side-by-side */}
+              <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
                 
-                {/* The clickable link that fades in after typing finishes */}
-            <div className={`mt-2 text-[14px] sm:text-[15px] md:text-base transition-all duration-1000 delay-300 ${omegleTypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
-              <span className="text-white/90">where we met: </span>
-              <a href="https://omegleapp.me/chat/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline transition-colors" style={{ textShadow: "0 0 10px rgba(96, 165, 250, 0.4)" }}>
-                https://omegleapp.me/chat/
-              </a>
-            </div>
+                {/* Images Column */}
+                <div
+                  ref={part3ScrollRef}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
+                >
+                  {/* Image 1: The Omegle Polaroid */}
+                  <div 
+                    className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                    style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
+                    onClick={() => setActiveMedia({ src: "/images/omeglememsgjpeg.jpeg", type: "image" })}
+                  >
+                    <img
+                      src="/images/omeglememsgjpeg.jpeg"
+                      alt="Where we met"
+                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                      draggable={false}
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+                  </div>
 
-            {/* --- MAIN SECTION DIVIDER --- */}
-<div 
-  className={`h-px w-full bg-white/30 rounded-full mt-24 mb-16 transition-opacity duration-1000 delay-700 ${omegleTypingFinished ? "opacity-100" : "opacity-0"}`} 
-/>
-{/* ---------------------------- */}
+                  {/* Image 2: The Follow Back Polaroid */}
+                  <div 
+                    className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                    style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.4s" }}
+                    onClick={() => setActiveMedia({ src: "/images/followback.jpeg", type: "image" })}
+                  >
+                    <img
+                      src="/images/followback.jpeg"
+                      alt="The Follow Back"
+                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                      draggable={false}
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                  </div>
+                </div>
+
+                {/* Text Column */}
+                <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
+                  <StoryTypingAnimation 
+                    paragraphs={OMEGLE_STORY_PARAGRAPHS} 
+                    started={showPart3} 
+                    onComplete={() => setOmegleTypingFinished(true)}
+                  />
+                  
+                  {/* The clickable link */}
+                  <div className={`mt-2 text-[14px] sm:text-[15px] md:text-base transition-all duration-1000 delay-300 ${omegleTypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+                    <span className="text-white/90">where we met: </span>
+                    <a href="https://omegleapp.me/chat/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline transition-colors" style={{ textShadow: "0 0 10px rgba(96, 165, 250, 0.4)" }}>
+                      https://omegleapp.me/chat/
+                    </a>
+                  </div>
+                </div>
               </div>
+
+              {/* --- MAIN SECTION DIVIDER (Now fully outside the columns!) --- */}
+              <div 
+                className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${omegleTypingFinished ? "opacity-100" : "opacity-0"}`} 
+              />
+              
             </div>
           )}
           
