@@ -437,10 +437,10 @@ function CinematicExperience() {
             </div>
 
             {/* --- MAIN SECTION DIVIDER --- */}
-            <div className={`w-full mt-24 mb-16 transition-all duration-1000 delay-700 ${omegleTypingFinished ? "opacity-100" : "opacity-0"}`}>
-              <hr className="border-0 h-[1px] bg-white/20" />
-            </div>
-            {/* ---------------------------- */}
+<div 
+  className={`h-px w-full bg-white/30 rounded-full mt-24 mb-16 transition-opacity duration-1000 delay-700 ${omegleTypingFinished ? "opacity-100" : "opacity-0"}`} 
+/>
+{/* ---------------------------- */}
               </div>
             </div>
           )}
