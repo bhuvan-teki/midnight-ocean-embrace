@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, X, ZoomIn, ZoomOut } from "lucide-react";
+import { ArrowLeft, ArrowRight, X, ZoomIn, ZoomOut } from "lucide-react";
 
 const STORY_PARAGRAPHS = [
   "Hyderabad, India to Sogod, Cebu — We are 4,968 kilometres apart.",
@@ -429,18 +429,19 @@ function CinematicExperience() {
                 />
                 
                 {/* The clickable link that fades in after typing finishes */}
-                <div className={`mt-2 text-[14px] sm:text-[15px] md:text-base transition-all duration-1000 delay-300 ${omegleTypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
-                  <span className="text-white/90">where we met: </span>
-                  <a 
-                    href="https://omegleapp.me/chat/" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-blue-400 hover:text-blue-300 underline transition-colors"
-                    style={{ textShadow: "0 0 10px rgba(96, 165, 250, 0.4)" }}
-                  >
-                    https://omegleapp.me/chat/
-                  </a>
-                </div>
+            <div className={`mt-2 text-[14px] sm:text-[15px] md:text-base transition-all duration-1000 delay-300 ${omegleTypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+              <span className="text-white/90">where we met: </span>
+              <a href="https://omegleapp.me/chat/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline transition-colors" style={{ textShadow: "0 0 10px rgba(96, 165, 250, 0.4)" }}>
+                https://omegleapp.me/chat/
+              </a>
+            </div>
+
+            {/* --- NOTION-STYLE DIVIDER --- */}
+            {/* Fades in softly after the Omegle link with a longer delay */}
+            <div className={`w-full mt-10 mb-6 transition-all duration-1000 delay-700 ${omegleTypingFinished ? "opacity-100" : "opacity-0"}`}>
+              <hr className="border-0 h-[1px] bg-white/10" />
+            </div>
+            {/* ---------------------------- */}
               </div>
             </div>
           )}
