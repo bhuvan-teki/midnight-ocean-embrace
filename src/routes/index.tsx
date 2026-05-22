@@ -758,6 +758,18 @@ function CinematicExperience() {
                         />
                         <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
                       </div>
+
+                    {/* Text Column */}
+                  <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
+                    {/* Only start typing when Row 4 finishes */}
+                    {row4TypingFinished && (
+                      <StoryTypingAnimation 
+                        paragraphs={ROW5_STORY_PARAGRAPHS} 
+                        started={row4TypingFinished} 
+                        onComplete={() => setRow5TypingFinished(true)}
+                      />
+                    )}
+                  </div>
                     ))}
                   </div>
 
