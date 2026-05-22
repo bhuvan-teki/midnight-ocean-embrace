@@ -772,6 +772,7 @@ function CinematicExperience() {
                       />
                     )}
                   </div>
+                </div>
 
                 {/* --- ROW 5 SECTION DIVIDER --- */}
                 <div 
