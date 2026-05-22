@@ -49,6 +49,14 @@ const ROW6_STORY_PARAGRAPHS = [
   "it's the smallest thing. but it's also everything."
 ];
 
+const AUDIO_PLAYLIST = [
+  "/audio/audio1.mp3.mpeg",
+  "/audio/audio2.mp3.mpeg",
+  "/audio/audio3.mp3.mpeg",
+  "/audio/audio4.mp3.mpeg",
+  "/audio/audio5.mp3.mpeg",
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -82,6 +90,8 @@ function CinematicExperience() {
   const row5ScrollRef = useRef<HTMLDivElement>(null);
   const [row6TypingFinished, setRow6TypingFinished] = useState(false);
   const row6ScrollRef = useRef<HTMLDivElement>(null);
+  const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   
   // New Universal Lightbox States
@@ -145,6 +155,12 @@ function CinematicExperience() {
       window.history.back();
     } else {
       setScene(1);
+    }
+    
+    // Reset the playlist if she goes back to the beginning
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      setCurrentAudioIndex(0); 
     }
   };
 
@@ -341,6 +357,39 @@ function CinematicExperience() {
     }, 1500);
     return () => clearInterval(interval);
   }, [isHovered, row5TypingFinished]);
+
+  // --- AUDIO CONTROLLER (Fade In & Playback) ---
+  useEffect(() => {
+    if (scene === 2 && audioRef.current) {
+      const audio = audioRef.current;
+      
+      // Start silent for the fade-in effect
+      audio.volume = 0; 
+      
+      // Play the audio
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => console.log("Audio playback prevented:", error));
+      }
+      
+      // Smooth fade-in over ~2 seconds to a pleasant medium tone
+      let vol = 0;
+      const fadeInterval = setInterval(() => {
+        vol += 0.05;
+        if (vol >= 0.4) { // 0.4 is the controlled medium tone
+          clearInterval(fadeInterval);
+          audio.volume = 0.4;
+        } else {
+          audio.volume = vol;
+        }
+      }, 250);
+
+      return () => clearInterval(fadeInterval);
+    } else if (scene === 1 && audioRef.current) {
+      // Pause if she goes back to the home screen
+      audioRef.current.pause();
+    }
+  }, [currentAudioIndex, scene]);
 
   return (
     <main className="fixed inset-0 overflow-hidden bg-black text-white select-none">
@@ -947,6 +996,16 @@ function CinematicExperience() {
         </div>
       </div>
 
+      {/* Invisible Audio Player */}
+      <audio 
+        ref={audioRef}
+        src={AUDIO_PLAYLIST[currentAudioIndex]}
+        onEnded={() => {
+          // Move to next track, or loop back to start if we hit the end
+          setCurrentAudioIndex((prev) => (prev + 1) % AUDIO_PLAYLIST.length);
+        }}
+      />
+
       <style>{`
       .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -971,7 +1030,7 @@ function CinematicExperience() {
         html, body, #root { height: 100%; overscroll-behavior: none; }
       `}</style>
     </main>
-    );
+  );
 }
 
 function StoryTypingAnimation({ paragraphs, started, onComplete }: { paragraphs: string[], started: boolean, onComplete?: () => void }) {
