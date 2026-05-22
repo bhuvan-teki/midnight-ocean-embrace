@@ -709,49 +709,57 @@ function CinematicExperience() {
                     onMouseLeave={() => setIsHovered(false)}
                     className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
                   >
-                    {/* Image 1: Video Call 1 */}
+                    {/* Image 1: The very first video call */}
                     <div 
                       className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
                       style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
-                      onClick={() => setActiveMedia({ src: "/images/videocall1.png", type: "image" })}
+                      onClick={() => setActiveMedia({ src: "/images/1stvideocall.jpeg", type: "image" })}
                     >
                       <img
-                        src="/images/videocall1.png"
-                        alt="Video Call Memory 1"
+                        src="/images/1stvideocall.jpeg"
+                        alt="1st Video Call"
                         className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
                         draggable={false}
                       />
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
                     </div>
 
-                    {/* Image 2: Video Call 2 */}
+                    {/* Image 2: General video calls image */}
                     <div 
                       className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
-                      style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.4s" }}
-                      onClick={() => setActiveMedia({ src: "/images/videocall2.png", type: "image" })}
+                      style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.3s" }}
+                      onClick={() => setActiveMedia({ src: "/images/videocalls.jpeg", type: "image" })}
                     >
                       <img
-                        src="/images/videocall2.png"
-                        alt="Video Call Memory 2"
+                        src="/images/videocalls.jpeg"
+                        alt="Video Calls"
                         className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
                         draggable={false}
                       />
                       <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
                     </div>
-                  </div>
 
-                  {/* Text Column */}
-                  <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
-                    {/* Only start typing when Row 4 finishes */}
-                    {row4TypingFinished && (
-                      <StoryTypingAnimation 
-                        paragraphs={ROW5_STORY_PARAGRAPHS} 
-                        started={row4TypingFinished} 
-                        onComplete={() => setRow5TypingFinished(true)}
-                      />
-                    )}
+                    {/* Images 3 through 7: Automatically loops through videocalls1.jpeg to videocalls5.jpeg */}
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <div 
+                        key={num} 
+                        className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                        style={{ 
+                          transform: num % 2 === 0 ? "rotate(-1.5deg)" : "rotate(1.5deg)", 
+                          animation: `floatY 6s ease-in-out infinite ${num * 0.4}s` 
+                        }}
+                        onClick={() => setActiveMedia({ src: `/images/videocalls${num}.jpeg`, type: "image" })}
+                      >
+                        <img 
+                          src={`/images/videocalls${num}.jpeg`} 
+                          alt={`Video Call Memory ${num}`} 
+                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]" 
+                          draggable={false} 
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                      </div>
+                    ))}
                   </div>
-                </div>
 
                 {/* --- ROW 5 SECTION DIVIDER --- */}
                 <div 
