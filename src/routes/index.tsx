@@ -561,6 +561,10 @@ function CinematicExperience() {
         </button>
 
         <div className="relative z-10 h-full w-full overflow-y-auto px-5 pt-20 pb-8 sm:px-10 sm:pt-24 sm:pb-12">
+          
+          {/* --- THE LIVE TIME COUNTER --- */}
+          <TimeTogether />
+
           <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
             {/* --- INDEPENDENT SCRAPBOOK CAROUSEL --- */}
             <div
@@ -1311,6 +1315,56 @@ function CinematicExperience() {
         html, body, #root { height: 100%; overscroll-behavior: none; }
       `}</style>
     </main>
+  );
+}
+
+function TimeTogether() {
+  const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0 });
+
+  useEffect(() => {
+    // The exact day you met: July 10, 2025
+    const startDate = new Date("2025-07-10T00:00:00");
+    
+    const calculateTime = () => {
+      const now = new Date();
+      // Ensure it doesn't go negative if testing before the date
+      const diff = Math.max(0, now.getTime() - startDate.getTime()); 
+      
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      
+      setTime({ days, hours, minutes });
+    };
+
+    calculateTime(); // Set initial time immediately
+    const interval = setInterval(calculateTime, 60000); // Update automatically every 60 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="w-full flex justify-center mb-16 mt-4">
+      <div className="flex flex-wrap justify-center gap-8 sm:gap-16 py-6 px-10 rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-sm shadow-2xl">
+        <div className="flex flex-col items-center">
+          <span className="text-5xl sm:text-7xl text-[#60a5fa]" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
+            {time.days}
+          </span>
+          <span className="text-sm sm:text-base uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Days</span>
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-5xl sm:text-7xl text-[#60a5fa]" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
+            {time.hours}
+          </span>
+          <span className="text-sm sm:text-base uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Hours</span>
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-5xl sm:text-7xl text-[#60a5fa]" style={{ fontFamily: "'Italianno', cursive", textShadow: "0 0 15px rgba(96,165,250,0.4)" }}>
+            {time.minutes}
+          </span>
+          <span className="text-sm sm:text-base uppercase tracking-[0.2em] text-white/70 mt-1" style={{ fontFamily: "'Jost', sans-serif" }}>Minutes</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
