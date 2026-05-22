@@ -17,8 +17,12 @@ const OMEGLE_STORY_PARAGRAPHS = [
 ];
 
 const ROW3_STORY_PARAGRAPHS = [
-  "Add your story about the reposts and the GPT research here.",
-  "You can write as many paragraphs as you need for this section."
+  "After you followed me back, I went straight to your Instagram. Scrolling through your posts, I stopped at a group photo — February 14, 2025. I couldn't figure out which one was you, so I asked.",
+  "You said, \"the one in the white shirt and green combo, wearing a watch.\"",
+  "And that was it. I saw you. Really saw you.",
+  "I kept scrolling. Reading your reposts, understanding the little things you shared. Slowly I pieced it together — you were single, and you were looking for someone caring. Someone who actually understands.",
+  "I thought, that's me. That can be me.",
+  "So I decided, quietly, that you were going to be mine."
 ];
 
 export const Route = createFileRoute("/")({
