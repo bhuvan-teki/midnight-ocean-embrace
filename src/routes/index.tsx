@@ -40,6 +40,7 @@ function CinematicExperience() {
   const [storyStarted, setStoryStarted] = useState(false);
   const [typingFinished, setTypingFinished] = useState(false);
   const [showPart3, setShowPart3] = useState(false);
+  const [omegleTypingFinished, setOmegleTypingFinished] = useState(false); // Add this new line!
   const [isHovered, setIsHovered] = useState(false);
   
   // New Universal Lightbox States
@@ -424,7 +425,23 @@ function CinematicExperience() {
   <StoryTypingAnimation 
     paragraphs={OMEGLE_STORY_PARAGRAPHS} 
     started={showPart3} 
+    onComplete={() => setOmegleTypingFinished(true)}
   />
+  
+  {/* The clickable link that fades in after typing finishes */}
+  <div className={`mt-2 text-[14px] sm:text-[15px] md:text-base transition-all duration-1000 delay-300 ${omegleTypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+    <span className="text-white/90">where we met: </span>
+    <a 
+      href="https://omegleapp.me/chat/" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="text-blue-400 hover:text-blue-300 underline transition-colors"
+      style={{ textShadow: "0 0 10px rgba(96, 165, 250, 0.4)" }}
+    >
+      https://omegleapp.me/chat/
+    </a>
+  </div>
+</div>
 </div>
             </div>
           )}
