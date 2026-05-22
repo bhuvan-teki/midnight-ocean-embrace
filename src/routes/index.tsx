@@ -633,7 +633,7 @@ function CinematicExperience() {
               {/* --- ROW 4 SECTION (The Argument) --- */}
               {/* ======================================= */}
               <div 
-                className={`w-full mt-4 pb-20 transition-all duration-1000 delay-300 ${row3TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+                className={`w-full pb-20 transition-all duration-1000 delay-300 ${row3TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
               >
                 <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
                   
@@ -698,7 +698,7 @@ function CinematicExperience() {
               {/* --- ROW 5 SECTION (Video Calls) --- */}
               {/* ======================================= */}
               <div 
-                className={`w-full mt-4 pb-20 transition-all duration-1000 delay-300 ${row4TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+                className={`w-full pb-20 transition-all duration-1000 delay-300 ${row4TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
               >
                 <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
                   
@@ -758,8 +758,10 @@ function CinematicExperience() {
                         />
                         <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
                       </div>
+                    ))}
+                  </div>
 
-                    {/* Text Column */}
+                  {/* Text Column */}
                   <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
                     {/* Only start typing when Row 4 finishes */}
                     {row4TypingFinished && (
@@ -770,15 +772,13 @@ function CinematicExperience() {
                       />
                     )}
                   </div>
-                    ))}
-                  </div>
+                </div>
 
                 {/* --- ROW 5 SECTION DIVIDER --- */}
                 <div 
                   className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row5TypingFinished ? "opacity-100" : "opacity-0"}`} 
                 />
               </div>
-            </div>
             </div>
           )}
           
