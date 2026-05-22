@@ -25,6 +25,14 @@ const ROW3_STORY_PARAGRAPHS = [
   "So I decided, quietly, that you were going to be mine."
 ];
 
+const ROW4_STORY_PARAGRAPHS = [
+  "we weren't always smooth. we fought. there were nights she said \"don't talk to me\" and i said \"leave it, you'll never understand.\" nights where she called my name over and over just to get through to me — bhuvyyy. bhuvyyy. bhuuvvy — and i went quiet anyway.",
+  "but we always came back.",
+  "the morning after every argument, one of us would break first. and somehow it was always softer than the night before. \"i'm sorry about last night bhuvy.\" \"yeah babby, i'll never get mad at you.\"",
+  "that's the thing about us. we never let it sit too long. we fought like we were scared of losing each other — because we were.",
+  "every argument just proved it more. we weren't going anywhere."
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -52,6 +60,8 @@ function CinematicExperience() {
   const [omegleTypingFinished, setOmegleTypingFinished] = useState(false); // Add this new line!
   const [row3TypingFinished, setRow3TypingFinished] = useState(false);
   const row3ScrollRef = useRef<HTMLDivElement>(null);
+  const [row4TypingFinished, setRow4TypingFinished] = useState(false);
+  const row4ScrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   
   // New Universal Lightbox States
@@ -242,6 +252,29 @@ function CinematicExperience() {
 
     return () => clearInterval(interval);
   }, [isHovered, showPart3]);
+
+  // --- ROW 4: AUTO-SWIPE BRAIN ---
+  useEffect(() => {
+    if (isHovered || !row3TypingFinished) return;
+
+    const interval = setInterval(() => {
+      if (row4ScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = row4ScrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll <= 0) return;
+        if (!row4ScrollRef.current.dataset.direction) row4ScrollRef.current.dataset.direction = 'right';
+        const swipeAmount = clientWidth + 24; 
+        if (row4ScrollRef.current.dataset.direction === 'right') {
+          row4ScrollRef.current.scrollBy({ left: swipeAmount, behavior: 'smooth' });
+          if (scrollLeft + clientWidth >= maxScroll - 10) row4ScrollRef.current.dataset.direction = 'left';
+        } else {
+          row4ScrollRef.current.scrollBy({ left: -swipeAmount, behavior: 'smooth' });
+          if (scrollLeft <= 10) row4ScrollRef.current.dataset.direction = 'right';
+        }
+      }
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [isHovered, row3TypingFinished]);
 
   return (
     <main className="fixed inset-0 overflow-hidden bg-black text-white select-none">
@@ -559,7 +592,72 @@ function CinematicExperience() {
                   className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row3TypingFinished ? "opacity-100" : "opacity-0"}`} 
                 />
               </div>
-              
+
+
+              {/* ======================================= */}
+              {/* --- ROW 4 SECTION (The Argument) --- */}
+              {/* ======================================= */}
+              <div 
+                className={`w-full mt-4 pb-20 transition-all duration-1000 delay-300 ${row3TypingFinished ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+              >
+                <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+                  
+                  {/* Images Column (argument1 & argument2) */}
+                  <div
+                    ref={row4ScrollRef}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className="flex shrink-0 w-[55vw] max-w-[240px] sm:w-[30vw] sm:max-w-[300px] overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 py-2 px-1"
+                  >
+                    {/* Image 1: Argument 1 */}
+                    <div 
+                      className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                      style={{ transform: "rotate(-2deg)", animation: "floatY 6s ease-in-out infinite" }}
+                      onClick={() => setActiveMedia({ src: "/images/argument1.jpeg", type: "image" })}
+                    >
+                      <img
+                        src="/images/argument1.jpeg"
+                        alt="Argument Memory 1"
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                        draggable={false}
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02061a]/40 to-transparent" />
+                    </div>
+
+                    {/* Image 2: Argument 2 */}
+                    <div 
+                      className="shrink-0 w-full aspect-[4/3] snap-center relative cursor-zoom-in rounded-xl ring-1 ring-white/20 shadow-2xl overflow-hidden"
+                      style={{ transform: "rotate(1.5deg)", animation: "floatY 6s ease-in-out infinite 0.4s" }}
+                      onClick={() => setActiveMedia({ src: "/images/argument2.jpeg", type: "image" })}
+                    >
+                      <img
+                        src="/images/argument2.jpeg"
+                        alt="Argument Memory 2"
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.05]"
+                        draggable={false}
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-[#02061a]/10" />
+                    </div>
+                  </div>
+
+                  {/* Text Column */}
+                  <div className="flex-1 w-full min-w-0 self-start pr-1" style={{fontFamily: "'Plateau', 'Jost', 'Inter', system-ui, sans-serif", fontWeight: 200, letterSpacing: "0.015em" }}>
+                    {/* Only start typing when Row 3 finishes */}
+                    {row3TypingFinished && (
+                      <StoryTypingAnimation 
+                        paragraphs={ROW4_STORY_PARAGRAPHS} 
+                        started={row3TypingFinished} 
+                        onComplete={() => setRow4TypingFinished(true)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* --- ROW 4 SECTION DIVIDER --- */}
+                <div 
+                  className={`h-px w-full bg-white/30 rounded-full mt-6 shrink-0 transition-opacity duration-1000 delay-700 ${row4TypingFinished ? "opacity-100" : "opacity-0"}`} 
+                />
+              </div>
             </div>
           )}
           
